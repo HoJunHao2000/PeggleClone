@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="GameboardEntity" representedClassName="GameboardEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="height" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="width" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="pegs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PegEntity" inverseName="gameboard" inverseEntity="PegEntity"/>
+    </entity>
+    <entity name="PegEntity" representedClassName="PegEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isBlue" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="x" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="y" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="gameboard" maxCount="1" deletionRule="Nullify" destinationEntity="GameboardEntity" inverseName="pegs" inverseEntity="GameboardEntity"/>
+    </entity>
+</model>
