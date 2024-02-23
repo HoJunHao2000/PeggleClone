@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LevelDesignerView: View {
-    @ObservedObject var viewModel = LevelDesigner()
+    @ObservedObject var viewModel = LevelDesignerViewModel()
 
     var body: some View {
         VStack {

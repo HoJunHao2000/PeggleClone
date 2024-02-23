@@ -16,14 +16,11 @@
 
 import Foundation
 
-struct Gameboard {
+class Gameboard {
     let id: UUID
     private(set) var name: String
     private(set) var boardSize: CGSize
     private(set) var pegs: [Peg]
-
-    private static let edgeMargin: CGFloat = 25.0
-    private static let minDistanceBetweenPegs: CGFloat = 50.0
 
     init(id: UUID, name: String, boardSize: CGSize, pegs: [Peg]) {
         self.id = id
@@ -34,7 +31,7 @@ struct Gameboard {
         assert(checkRepresentation())
     }
 
-    mutating func setName(newName: String) {
+    func setName(newName: String) {
         assert(checkRepresentation())
 
         self.name = newName
@@ -42,58 +39,61 @@ struct Gameboard {
         assert(checkRepresentation())
     }
 
-    mutating func setBoardSize(newSize: CGSize) {
+    func setBoardSize(newSize: CGSize) {
         assert(checkRepresentation())
 
-        guard isPegsWithinNewBoard(newSize: newSize) else {
-            return
-        }
         self.boardSize = newSize
 
         assert(checkRepresentation())
     }
 
-    mutating func addPeg(at location: CGPoint, isBlue: Bool) {
+    func addPeg(peg: Peg) {
         assert(checkRepresentation())
 
-        guard isValidLocation(point: location) else {
-            return
-        }
-
-        self.pegs.append(Peg(id: UUID(), position: location, isBlue: isBlue))
+        self.pegs.append(peg)
 
         assert(checkRepresentation())
     }
 
-    mutating func deletePeg(index: Int) {
+    func deletePeg(peg: Peg) {
         assert(checkRepresentation())
 
-        guard index >= 0, index < self.pegs.count else {
-            return
-        }
-
-        self.pegs.remove(at: index)
+        self.pegs.removeAll { $0 == peg }
 
         assert(checkRepresentation())
     }
 
-    mutating func movePeg(at index: Int, to location: CGPoint) {
+    func movePeg(peg: Peg, to location: CGPoint) {
         assert(checkRepresentation())
 
-        guard index >= 0, index < self.pegs.count else {
-            return
+        if let index = pegs.firstIndex(where: { $0 == peg }) {
+            pegs[index].setPosition(newPosition: location)
         }
-
-        guard isValidLocation(point: location, at: index) else {
-            return
-        }
-
-        pegs[index].setPosition(newPosition: location)
 
         assert(checkRepresentation())
     }
 
-    mutating func reset() {
+    func resizePeg(peg: Peg, newDiameter: Double) {
+        assert(checkRepresentation())
+
+        if let index = pegs.firstIndex(where: { $0 == peg }) {
+            pegs[index].setDiameter(newDiameter: newDiameter)
+        }
+
+        assert(checkRepresentation())
+    }
+
+    func rotatePeg(peg: Peg, newAngle: Double) {
+        assert(checkRepresentation())
+
+        if let index = pegs.firstIndex(where: { $0 == peg }) {
+            pegs[index].setRotation(newAngle: newAngle)
+        }
+
+        assert(checkRepresentation())
+    }
+
+    func reset() {
         assert(checkRepresentation())
 
         self.pegs = []
@@ -101,61 +101,29 @@ struct Gameboard {
         assert(checkRepresentation())
     }
 
-    private func isPegsWithinNewBoard(newSize: CGSize) -> Bool {
-        let halfWidth = newSize.width / 2.0
-            let halfHeight = newSize.height / 2.0
-
-        for peg in self.pegs {
-            let deltaX = abs(peg.position.x - newSize.width / 2.0)
-            let deltaY = abs(peg.position.y - newSize.height / 2.0)
-
-            if deltaX > halfWidth || deltaY > halfHeight {
-                return false
-            }
-        }
-
-        return true
-    }
-
-    private func isValidLocation(point: CGPoint, at: Int? = nil) -> Bool {
-        // Checks if point is within bounds of the gameboard
-        guard CGRect(x: Gameboard.edgeMargin,
-                     y: Gameboard.edgeMargin,
-                     width: self.boardSize.width - 2 * Gameboard.edgeMargin,
-                     height: self.boardSize.height - 2 * Gameboard.edgeMargin).contains(point) else {
-            return false
-        }
-
-        // Checks if peg overlaps with other pegs
-        let isOverlap = self.pegs.enumerated().contains { index, existingPeg in
-            if at == index {
-                return false
-            }
-            return arePegsOverlapping(existingPeg.position, point)
-        }
-
-        return !isOverlap
-    }
-
-    private func arePegsOverlapping(_ position1: CGPoint, _ position2: CGPoint) -> Bool {
-        let distance = sqrt(pow(position1.x - position2.x, 2) + pow(position1.y - position2.y, 2))
-        return distance < Gameboard.minDistanceBetweenPegs
-    }
-
     private func checkRepresentation() -> Bool {
         // Check if all pegs are within the board
-        guard isPegsWithinNewBoard(newSize: boardSize) else {
-            return false
+        for peg in pegs {
+            let x1 = peg.position.x - (peg.diameter / 2.0)
+            let x2 = peg.position.x + (peg.diameter / 2.0)
+            let y1 = peg.position.y - (peg.diameter / 2.0)
+            let y2 = peg.position.y + (peg.diameter / 2.0)
+
+            if x1 <= 0 || x2 >= boardSize.width || y1 <= 0 || y2 >= boardSize.height {
+                return false
+            }
         }
 
         // Check if there is any overlap between pegs
         for (index, peg) in pegs.enumerated() {
-            let pegPosition = peg.position
             let isOverlap = pegs.enumerated().contains { otherIndex, otherPeg in
                 if index == otherIndex {
                     return false
                 }
-                return arePegsOverlapping(pegPosition, otherPeg.position)
+                let distance = sqrt(pow(peg.position.x - otherPeg.position.x, 2)
+                                    + pow(peg.position.y - otherPeg.position.y, 2))
+                let combinedRadius = (peg.diameter / 2) + (otherPeg.diameter / 2)
+                return distance <= combinedRadius
             }
 
             if isOverlap {

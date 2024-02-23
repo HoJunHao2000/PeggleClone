@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LevelDesignerActionButtonsView: View {
-    @ObservedObject var viewModel: LevelDesigner
+    @ObservedObject var viewModel: LevelDesignerViewModel
 
     @State private var text: String = ""
     @State private var isSavePresented = false
@@ -53,7 +53,7 @@ struct LevelDesignerActionButtonsView: View {
             Picker("Current Gameboard", selection: $selectedGameboard) {
                 Text("New Gameboard")
                     .tag(GameboardEntity?.none)
-                ForEach(viewModel.getGameboards(), id: \.id) { gameboardEntity in
+                ForEach(viewModel.gameboards, id: \.self) { gameboardEntity in
                     if let name = gameboardEntity.name {
                         Text(name)
                             .tag(GameboardEntity?.some(gameboardEntity))

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LevelDesignerBoardView: View {
-    @ObservedObject var viewModel: LevelDesigner
+    @ObservedObject var viewModel: LevelDesignerViewModel
 
     var body: some View {
         VStack {
@@ -19,7 +19,7 @@ struct LevelDesignerBoardView: View {
 }
 
 private struct GameboardView: View {
-    @ObservedObject var viewModel: LevelDesigner
+    @ObservedObject var viewModel: LevelDesignerViewModel
 
     var body: some View {
         GeometryReader { geometry in
@@ -54,60 +54,85 @@ private struct BoardView: View {
 }
 
 private struct PegsView: View {
-    @ObservedObject var viewModel: LevelDesigner
+    @ObservedObject var viewModel: LevelDesignerViewModel
 
     var body: some View {
-        let gameboard = viewModel.gameboard
+        let pegs = viewModel.gameboard.pegs
 
-        ForEach(gameboard.pegs.indices, id: \.self) { index in
-            PegView(position: gameboard.pegs[index].position, isBlue: gameboard.pegs[index].isBlue)
+        let pegViewMap: [PegType: (Double, CGPoint, Double) -> AnyView] = [
+            .NormalPeg: { width, position, rotation in AnyView(normalPegView(width: width,
+                                                                             position: position,
+                                                                             rotation: rotation)) },
+            .GoalPeg: { width, position, rotation in AnyView(goalPegView(width: width,
+                                                                         position: position,
+                                                                         rotation: rotation)) }
+        ]
+
+        ForEach(pegs, id: \.self) { peg in
+            pegViewMap[peg.pegtype]?(peg.diameter, peg.position, peg.rotation)
                 .onTapGesture {
                     if viewModel.isDelete {
-                        deletePeg(at: index)
+                        viewModel.deletePeg(peg: peg)
                     }
                 }
                 .onLongPressGesture(minimumDuration: 1.0) {
-                    deletePeg(at: index)
+                    viewModel.deletePeg(peg: peg)
                 }
                 .gesture(
                     DragGesture()
                         .onChanged({ value in
-                            viewModel.movePeg(at: index, to: value.location)
+                            viewModel.movePeg(peg: peg, to: value.location)
                         })
                 )
         }
     }
 
-    private func deletePeg(at index: Int) {
-        viewModel.deletePeg(at: index)
+    private func normalPegView(width: Double, position: CGPoint, rotation: Double) -> some View {
+        ImageView(imageName: "peg-blue")
+            .frame(width: width)
+            .rotationEffect(.degrees(rotation))
+            .position(position)
+    }
+
+    private func goalPegView(width: Double, position: CGPoint, rotation: Double) -> some View {
+        ImageView(imageName: "peg-orange")
+            .frame(width: width)
+            .rotationEffect(.degrees(rotation))
+            .position(position)
     }
 }
 
 private struct ButtonsView: View {
-    @ObservedObject var viewModel: LevelDesigner
+    @ObservedObject var viewModel: LevelDesignerViewModel
 
     var body: some View {
         HStack {
-            ButtonView(imageName: "peg-blue", tapAction: {
-                viewModel.setIsBlue(isBlue: true)
-            })
-            .opacity(buttonOpacity(true))
+            Button(action: {
+                viewModel.setPegType(pegtype: .NormalPeg)
+            }) {
+                ImageView(imageName: "peg-blue")
+                    .opacity(viewModel.pegtype == .NormalPeg ? 1.0 : 0.5)
+                    .frame(width: 75)
+            }
 
-            ButtonView(imageName: "peg-orange", tapAction: {
-                viewModel.setIsBlue(isBlue: false)
-            })
-            .opacity(buttonOpacity(false))
+            Button(action: {
+                viewModel.setPegType(pegtype: .GoalPeg)
+            }) {
+                ImageView(imageName: "peg-orange")
+                    .opacity(viewModel.pegtype == .GoalPeg ? 1.0 : 0.5)
+                    .frame(width: 75)
+            }
 
             Spacer()
 
-            ButtonView(imageName: "delete", tapAction: {
+            Button(action: {
                 viewModel.toggleIsDelete()
-            })
+            }) {
+                ImageView(imageName: "delete")
+                    .opacity(viewModel.isDelete ? 1.0 : 0.5)
+                    .frame(width: 75)
+            }
         }
-    }
-
-    private func buttonOpacity(_ buttonIsBlue: Bool) -> Double {
-        viewModel.isDelete ? 0.5 : viewModel.isBlue == buttonIsBlue ? 1.0 : 0.5
     }
 }
 
@@ -118,20 +143,6 @@ private struct ImageView: View {
         Image(imageName)
             .resizable()
             .scaledToFit()
-    }
-}
-
-private struct ButtonView: View {
-    var imageName: String
-    var tapAction: () -> Void
-
-    var body: some View {
-        Button(action: {
-            tapAction()
-        }) {
-            ImageView(imageName: imageName)
-                .frame(width: 100)
-        }
     }
 }
 

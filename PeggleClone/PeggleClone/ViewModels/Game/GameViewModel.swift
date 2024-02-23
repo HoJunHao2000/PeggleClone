@@ -1,0 +1,108 @@
+//
+//  GameViewModel.swift
+//  PeggleClone
+//
+//  Created by Ho Jun Hao on 9/2/24.
+//
+
+import Foundation
+import QuartzCore
+
+class GameViewModel: ObservableObject {
+    private static let SECONDS_ELAPSED_PER_FRAME: Double = 1 / 120
+
+    private(set) var gameEngine: GameEngine
+    private(set) var cannonAngle: Double
+    private var displayLink: CADisplayLink?
+    private var previousTime: TimeInterval
+    private var lag: Double
+
+    init(gameboard: Gameboard) {
+        self.gameEngine = GameEngine(gameboard: gameboard)
+        self.cannonAngle = 0.0
+        self.previousTime = Date().timeIntervalSince1970
+        self.lag = 0
+    }
+
+    var pegs: [PegGameObject] {
+        gameEngine.pegs
+    }
+
+    var ball: BallGameObject? {
+        gameEngine.ball
+    }
+
+    var boardSize: CGSize {
+        gameEngine.gameboard.boardSize
+    }
+
+    var score: Int {
+        gameEngine.score
+    }
+
+    var isGameOver: Bool {
+        gameEngine.isGameOver
+    }
+
+    var ballsRemaining: Int {
+        gameEngine.ballsRemaining
+    }
+
+    func end() {
+        displayLink?.invalidate()
+        displayLink = nil
+    }
+
+    func shoot(at: CGPoint) {
+        guard gameEngine.isReadyToShoot && at.y >= 0 else {
+            return
+        }
+        gameEngine.launchBall(point: at)
+        createDisplayLink()
+    }
+
+    func reset() {
+        gameEngine.reset()
+    }
+
+    func adjustCannonAngle(point: CGPoint) {
+        let deltaX = point.x - (boardSize.width / 2)
+        let deltaY = point.y - 0
+
+        let angleRadians = atan2(deltaY, deltaX)
+
+        let angleDegrees = angleRadians * 180.0 / Double.pi
+
+        let angleToRotate = -(90.0 - angleDegrees)
+
+        guard angleToRotate <= 90 && angleToRotate >= -90 else {
+            return
+        }
+
+        self.cannonAngle = angleToRotate
+    }
+
+    private func createDisplayLink() {
+        let displayLink = CADisplayLink(
+            target: self,
+            selector: #selector(step)
+        )
+        displayLink.add(to: .current, forMode: .common)
+        self.displayLink = displayLink
+        self.previousTime = Date().timeIntervalSince1970
+    }
+
+    @objc private func step(displayLink: CADisplayLink) {
+        let currentTime = Date().timeIntervalSince1970
+        let elapsed = currentTime - previousTime
+        previousTime = currentTime
+        lag += elapsed
+
+        while lag >= GameViewModel.SECONDS_ELAPSED_PER_FRAME {
+            gameEngine.update(timeDelta: GameViewModel.SECONDS_ELAPSED_PER_FRAME)
+            lag -= GameViewModel.SECONDS_ELAPSED_PER_FRAME
+        }
+
+        objectWillChange.send()
+    }
+}
