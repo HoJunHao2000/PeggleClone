@@ -21,12 +21,14 @@ class Gameboard {
     private(set) var name: String
     private(set) var boardSize: CGSize
     private(set) var pegs: [Peg]
+    private(set) var blocks: [Block]
 
-    init(id: UUID, name: String, boardSize: CGSize, pegs: [Peg]) {
+    init(id: UUID, name: String, boardSize: CGSize, pegs: [Peg], blocks: [Block]) {
         self.id = id
         self.name = name
         self.boardSize = boardSize
         self.pegs = pegs
+        self.blocks = blocks
 
         assert(checkRepresentation())
     }
@@ -55,10 +57,26 @@ class Gameboard {
         assert(checkRepresentation())
     }
 
+    func addBlock(block: Block) {
+        assert(checkRepresentation())
+
+        self.blocks.append(block)
+
+        assert(checkRepresentation())
+    }
+
     func deletePeg(peg: Peg) {
         assert(checkRepresentation())
 
         self.pegs.removeAll { $0 == peg }
+
+        assert(checkRepresentation())
+    }
+
+    func deleteBlock(block: Block) {
+        assert(checkRepresentation())
+
+        self.blocks.removeAll { $0 == block }
 
         assert(checkRepresentation())
     }
@@ -68,6 +86,16 @@ class Gameboard {
 
         if let index = pegs.firstIndex(where: { $0 == peg }) {
             pegs[index].setPosition(newPosition: location)
+        }
+
+        assert(checkRepresentation())
+    }
+
+    func moveBlock(block: Block, to location: CGPoint) {
+        assert(checkRepresentation())
+
+        if let index = blocks.firstIndex(where: { $0 == block }) {
+            blocks[index].setPosition(newPosition: location)
         }
 
         assert(checkRepresentation())
@@ -83,6 +111,26 @@ class Gameboard {
         assert(checkRepresentation())
     }
 
+    func resizeBlockHeight(block: Block, newHeight: Double) {
+        assert(checkRepresentation())
+
+        if let index = blocks.firstIndex(where: { $0 == block }) {
+            blocks[index].setHeight(newHeight: newHeight)
+        }
+
+        assert(checkRepresentation())
+    }
+
+    func resizeBlockWidth(block: Block, newWidth: Double) {
+        assert(checkRepresentation())
+
+        if let index = blocks.firstIndex(where: { $0 == block }) {
+            blocks[index].setWidth(newWidth: newWidth)
+        }
+
+        assert(checkRepresentation())
+    }
+
     func rotatePeg(peg: Peg, newAngle: Double) {
         assert(checkRepresentation())
 
@@ -93,10 +141,21 @@ class Gameboard {
         assert(checkRepresentation())
     }
 
+    func rotateBlock(block: Block, newAngle: Double) {
+        assert(checkRepresentation())
+
+        if let index = blocks.firstIndex(where: { $0 == block }) {
+            blocks[index].setRotation(newAngle: newAngle)
+        }
+
+        assert(checkRepresentation())
+    }
+
     func reset() {
         assert(checkRepresentation())
 
         self.pegs = []
+        self.blocks = []
 
         assert(checkRepresentation())
     }
@@ -130,6 +189,12 @@ class Gameboard {
                 return false
             }
         }
+
+        // Check if blocks are within the board
+
+        // Check if any overlap between blocks
+
+        // Check if overlap between blocks and pegs
 
         return true
     }

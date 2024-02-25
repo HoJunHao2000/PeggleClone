@@ -39,6 +39,7 @@ class GameboardCoreDataTranslator {
                          name: entity.name ?? "",
                          boardSize: CGSize(width: CGFloat(entity.width),
                                            height: CGFloat(entity.height)),
-                         pegs: pegs)
+                         pegs: pegs,
+                         blocks: [])
     }
 }

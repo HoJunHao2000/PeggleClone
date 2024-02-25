@@ -24,10 +24,16 @@
 		462845642B8891A3003E40D8 /* CollisionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462845632B8891A3003E40D8 /* CollisionDelegate.swift */; };
 		462845662B8891CE003E40D8 /* IntersectorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462845652B8891CE003E40D8 /* IntersectorDelegate.swift */; };
 		462845682B8891E3003E40D8 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462845672B8891E3003E40D8 /* Utils.swift */; };
+		4628456B2B891BB1003E40D8 /* GameData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 462845692B891BB1003E40D8 /* GameData.xcdatamodeld */; };
 		464192C32B8375330098F746 /* PeggleCloneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464192C22B8375330098F746 /* PeggleCloneApp.swift */; };
 		464192C72B8375340098F746 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 464192C62B8375340098F746 /* Assets.xcassets */; };
 		464192CA2B8375340098F746 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 464192C92B8375340098F746 /* Preview Assets.xcassets */; };
 		464192D42B8375340098F746 /* PeggleCloneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464192D32B8375340098F746 /* PeggleCloneTests.swift */; };
+		464B06AA2B89D14100DD1A95 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06A92B89D14100DD1A95 /* MainView.swift */; };
+		464B06AC2B89E09900DD1A95 /* LevelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */; };
+		464B06AE2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */; };
+		464B06B02B8AE59E00DD1A95 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AF2B8AE59E00DD1A95 /* Block.swift */; };
+		464B06B22B8B0A4600DD1A95 /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06B12B8B0A4600DD1A95 /* CGRect.swift */; };
 		46F4BAAC2B837A0C00890223 /* Gameboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAB2B837A0C00890223 /* Gameboard.swift */; };
 		46F4BAAE2B837A2700890223 /* Peg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAD2B837A2700890223 /* Peg.swift */; };
 		46F4BAB02B837A5500890223 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAF2B837A5500890223 /* CoreDataManager.swift */; };
@@ -65,12 +71,18 @@
 		462845632B8891A3003E40D8 /* CollisionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionDelegate.swift; sourceTree = "<group>"; };
 		462845652B8891CE003E40D8 /* IntersectorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntersectorDelegate.swift; sourceTree = "<group>"; };
 		462845672B8891E3003E40D8 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		4628456A2B891BB1003E40D8 /* GameData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GameData.xcdatamodel; sourceTree = "<group>"; };
 		464192BF2B8375330098F746 /* PeggleClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PeggleClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		464192C22B8375330098F746 /* PeggleCloneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeggleCloneApp.swift; sourceTree = "<group>"; };
 		464192C62B8375340098F746 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		464192C92B8375340098F746 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		464192CF2B8375340098F746 /* PeggleCloneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PeggleCloneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		464192D32B8375340098F746 /* PeggleCloneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeggleCloneTests.swift; sourceTree = "<group>"; };
+		464B06A92B89D14100DD1A95 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectorView.swift; sourceTree = "<group>"; };
+		464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectorViewModel.swift; sourceTree = "<group>"; };
+		464B06AF2B8AE59E00DD1A95 /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
+		464B06B12B8B0A4600DD1A95 /* CGRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
 		46F4BAAB2B837A0C00890223 /* Gameboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gameboard.swift; sourceTree = "<group>"; };
 		46F4BAAD2B837A2700890223 /* Peg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peg.swift; sourceTree = "<group>"; };
 		46F4BAAF2B837A5500890223 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
@@ -102,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				4628454C2B888FB6003E40D8 /* GameView.swift */,
+				464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -192,6 +205,7 @@
 				46F4BAAF2B837A5500890223 /* CoreDataManager.swift */,
 				462845412B8839A4003E40D8 /* GameboardCoreDataTranslator.swift */,
 				462845432B883A3A003E40D8 /* PegCoreDataTranslator.swift */,
+				462845692B891BB1003E40D8 /* GameData.xcdatamodeld */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -201,6 +215,8 @@
 			children = (
 				46F4BAAB2B837A0C00890223 /* Gameboard.swift */,
 				46F4BAAD2B837A2700890223 /* Peg.swift */,
+				464B06AF2B8AE59E00DD1A95 /* Block.swift */,
+				464B06B12B8B0A4600DD1A95 /* CGRect.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -219,6 +235,7 @@
 			children = (
 				4628454B2B888FA6003E40D8 /* Game */,
 				46F4BAB52B837AC100890223 /* LevelDesigner */,
+				464B06A92B89D14100DD1A95 /* MainView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -254,6 +271,7 @@
 			isa = PBXGroup;
 			children = (
 				462845502B889050003E40D8 /* GameViewModel.swift */,
+				464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -413,15 +431,21 @@
 				4628455D2B88913E003E40D8 /* PhysicsObject.swift in Sources */,
 				46F4BAB72B837AF400890223 /* LevelDesignerActionButtonsView.swift in Sources */,
 				46F4BAAC2B837A0C00890223 /* Gameboard.swift in Sources */,
+				464B06AC2B89E09900DD1A95 /* LevelSelectorView.swift in Sources */,
 				462845582B8890E7003E40D8 /* PegGameObject.swift in Sources */,
 				462845612B889161003E40D8 /* LinePhysicsObject.swift in Sources */,
 				462845442B883A3A003E40D8 /* PegCoreDataTranslator.swift in Sources */,
 				462845662B8891CE003E40D8 /* IntersectorDelegate.swift in Sources */,
 				46F4BAB02B837A5500890223 /* CoreDataManager.swift in Sources */,
+				464B06AA2B89D14100DD1A95 /* MainView.swift in Sources */,
 				462845562B88909F003E40D8 /* BallGameObject.swift in Sources */,
 				462845642B8891A3003E40D8 /* CollisionDelegate.swift in Sources */,
+				464B06AE2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift in Sources */,
 				4628455F2B889150003E40D8 /* CirclePhysicsObject.swift in Sources */,
+				464B06B22B8B0A4600DD1A95 /* CGRect.swift in Sources */,
 				46F4BABB2B837B3100890223 /* LevelDesignerView.swift in Sources */,
+				4628456B2B891BB1003E40D8 /* GameData.xcdatamodeld in Sources */,
+				464B06B02B8AE59E00DD1A95 /* Block.swift in Sources */,
 				464192C32B8375330098F746 /* PeggleCloneApp.swift in Sources */,
 				4628455A2B889106003E40D8 /* PhysicsEngine.swift in Sources */,
 			);
@@ -704,6 +728,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		462845692B891BB1003E40D8 /* GameData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4628456A2B891BB1003E40D8 /* GameData.xcdatamodel */,
+			);
+			currentVersion = 4628456A2B891BB1003E40D8 /* GameData.xcdatamodel */;
+			path = GameData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 464192B72B8375330098F746 /* Project object */;
 }

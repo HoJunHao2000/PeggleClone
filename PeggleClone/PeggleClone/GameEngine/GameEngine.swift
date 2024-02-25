@@ -43,6 +43,7 @@ class GameEngine {
     private(set) var ball: BallGameObject?
     private(set) var score: Int = 0
     private(set) var ballsRemaining: Int
+    private(set) var pegsRemainingByType: [PegType: Int]
 
     init(gameboard: Gameboard) {
         self.physicsEngine = PhysicsEngine()
@@ -51,6 +52,7 @@ class GameEngine {
         self.removedPegs = []
         self.score = 0
         self.ballsRemaining = GameEngine.INITIAL_NUMBER_OF_BALLS
+        self.pegsRemainingByType = [:]
 
         addPegsIntoGame(pegs: gameboard.pegs)
         addPhysicsBoundary(boardSize: gameboard.boardSize)
@@ -140,6 +142,12 @@ class GameEngine {
 
     private func addPegsIntoGame(pegs: [Peg]) {
         for peg in pegs {
+            if let count = pegsRemainingByType[peg.pegtype] {
+                pegsRemainingByType[peg.pegtype] = count + 1
+            } else {
+                pegsRemainingByType[peg.pegtype] = 1
+            }
+
             let pegGameObject = PegGameObject(peg: peg)
 
             self.pegs.append(pegGameObject)
@@ -191,6 +199,10 @@ class GameEngine {
         self.ball = nil
 
         for peg in pegs where peg.isLit && !removedPegs.contains(peg) {
+            if let count = pegsRemainingByType[peg.pegtype] {
+                pegsRemainingByType[peg.pegtype] = count - 1
+            }
+
             physicsEngine.removePhysicsObject(physicsObject: peg.physicsObject)
             score += 1
             removedPegs.insert(peg)
@@ -201,6 +213,10 @@ class GameEngine {
 
     private func removePegsPremature() {
         for peg in pegs where peg.shouldRemove && !removedPegs.contains(peg) {
+            if let count = pegsRemainingByType[peg.pegtype] {
+                pegsRemainingByType[peg.pegtype] = count - 1
+            }
+
             physicsEngine.removePhysicsObject(physicsObject: peg.physicsObject)
             score += 1
             removedPegs.insert(peg)

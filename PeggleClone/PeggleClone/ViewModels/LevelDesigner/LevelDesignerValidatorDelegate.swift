@@ -8,82 +8,187 @@
 import Foundation
 
 class LevelDesignerValidatorDelegate {
-    func arePegsWithinBoard(boardSize: CGSize, pegs: [Peg]) -> Bool {
-        for peg in pegs where !isPegWithinBoard(boardSize: boardSize, peg: peg) {
+    func arePegsAndBlocksWithinBoard(boardSize: CGSize, gameboard: Gameboard) -> Bool {
+        for block in gameboard.blocks where !isBlockWithinBoard(boardSize: boardSize, block: block) {
+            return false
+        }
+
+        for peg in gameboard.pegs where !isPegWithinBoard(boardSize: boardSize, peg: peg) {
             return false
         }
 
         return true
     }
 
-    func isValidLocation(newPeg: Peg, boardSize: CGSize, pegs: [Peg]) -> Bool {
+    func isValidLocation(newPeg: Peg, gameboard: Gameboard) -> Bool {
         // Checks if newPeg is within bounds of the gameboard
-        guard !isPegWithinBoard(boardSize: boardSize, peg: newPeg) else {
+        guard isPegWithinBoard(boardSize: gameboard.boardSize, peg: newPeg) else {
             return false
         }
 
         // Checks if peg overlaps with other pegs
-        let isOverlap = pegs.enumerated().contains { _, existingPeg in
-            arePegsOverlapping(peg1: existingPeg, peg2: newPeg)
+        for peg in gameboard.pegs where arePegsOverlapping(peg1: newPeg, peg2: peg) {
+            return false
         }
 
-        return !isOverlap
+        // Checks if peg overlaps with other blocks
+        for block in gameboard.blocks where arePegBlockOverlapping(peg: newPeg, block: block) {
+            return false
+        }
+
+        return true
+    }
+
+    func isValidLocation(newBlock: Block, gameboard: Gameboard) -> Bool {
+        // Checks if newBlock is within bounds of gameboard
+        guard isBlockWithinBoard(boardSize: gameboard.boardSize, block: newBlock) else {
+            return false
+        }
+
+        // Check if block overlaps with other blocks
+        for block in gameboard.blocks where areBlocksOverlapping(block1: block, block2: newBlock) {
+            return false
+        }
+
+        // Check if block overlaps with other pegs
+        for pegs in gameboard.pegs where arePegBlockOverlapping(peg: pegs, block: newBlock) {
+            return false
+        }
+
+        return true
     }
 
     func isValidLocation(point: CGPoint, peg: Peg, gameboard: Gameboard) -> Bool {
-        let boardSize = gameboard.boardSize
-        let pegs = gameboard.pegs
-
         let oldPegPosition = peg.position
+
         peg.setPosition(newPosition: point)
-
-        // Checks if peg is within bounds of the gameboard
-        guard !isPegWithinBoard(boardSize: boardSize, peg: peg) else {
-            peg.setPosition(newPosition: oldPegPosition)
-            return false
-        }
-
-        // Checks if peg overlaps with other pegs
-        let isOverlap = pegs.enumerated().contains { _, existingPeg in
-            guard existingPeg == peg else {
-                return false
-            }
-            return arePegsOverlapping(peg1: existingPeg, peg2: peg)
-        }
-
+        let result = isValidPegModification(peg: peg, gameboard: gameboard)
         peg.setPosition(newPosition: oldPegPosition)
-        return !isOverlap
+
+        return result
+    }
+
+    func isValidLocation(point: CGPoint, block: Block, gameboard: Gameboard) -> Bool {
+        let oldBlockPosition = block.position
+
+        block.setPosition(newPosition: point)
+        let result = isValidBlockModification(block: block, gameboard: gameboard)
+        block.setPosition(newPosition: oldBlockPosition)
+
+        return result
     }
 
     func isValidSize(peg: Peg, diameter: Double, gameboard: Gameboard) -> Bool {
-        let boardSize = gameboard.boardSize
-        let pegs = gameboard.pegs
-
         let oldPegDiameter = peg.diameter
+
         peg.setDiameter(newDiameter: diameter)
-
-        // Checks if peg is within bounds of the gameboard
-        guard !isPegWithinBoard(boardSize: boardSize, peg: peg) else {
-            peg.setDiameter(newDiameter: oldPegDiameter)
-            return false
-        }
-
-        // Checks if peg overlaps with other pegs
-        let isOverlap = pegs.enumerated().contains { _, existingPeg in
-            guard existingPeg == peg else {
-                return false
-            }
-            return arePegsOverlapping(peg1: existingPeg, peg2: peg)
-        }
-
+        let result = isValidPegModification(peg: peg, gameboard: gameboard)
         peg.setDiameter(newDiameter: oldPegDiameter)
-        return !isOverlap
+
+        return result
     }
 
-    func arePegsOverlapping(peg1: Peg, peg2: Peg) -> Bool {
+    func isValidBlockRotation(block: Block, newRotation: Double, gameboard: Gameboard) -> Bool {
+        let oldBlockRotation = block.rotation
+
+        block.setRotation(newAngle: newRotation)
+        let result = isValidBlockModification(block: block, gameboard: gameboard)
+        block.setRotation(newAngle: oldBlockRotation)
+
+        return result
+    }
+
+    func isValidBlockHeight(block: Block, newHeight: Double, gameboard: Gameboard) -> Bool {
+        let oldBlockHeight = block.height
+
+        block.setHeight(newHeight: newHeight)
+        let result = isValidBlockModification(block: block, gameboard: gameboard)
+        block.setRotation(newAngle: oldBlockHeight)
+
+        return result
+    }
+
+    func isValidBlockWidth(block: Block, newWidth: Double, gameboard: Gameboard) -> Bool {
+        let oldBlockWidth = block.width
+
+        block.setWidth(newWidth: newWidth)
+        let result = isValidBlockModification(block: block, gameboard: gameboard)
+        block.setWidth(newWidth: oldBlockWidth)
+
+        return result
+    }
+
+    private func arePegsOverlapping(peg1: Peg, peg2: Peg) -> Bool {
         let distance = sqrt(pow(peg1.position.x - peg2.position.x, 2) + pow(peg1.position.y - peg2.position.y, 2))
         let combinedRadius = (peg1.diameter / 2) + (peg2.diameter / 2)
         return distance <= combinedRadius
+    }
+
+    private func areBlocksOverlapping(block1: Block, block2: Block) -> Bool {
+        let corners1 = cornersOfRotatedRect(block: block1)
+        let corners2 = cornersOfRotatedRect(block: block2)
+
+        let polygons = [corners1, corners2]
+        var minA, maxA, projected, minB, maxB: Double
+
+        for i in 0..<polygons.count {
+            let polygon = polygons[i]
+
+            for i1 in 0..<polygon.count {
+                let i2 = (i1 + 1) % polygon.count
+                let p1 = polygon[i1]
+                let p2 = polygon[i2]
+
+                let normal = (x: p2.y - p1.y, y: p1.x - p2.x)
+
+                minA = .greatestFiniteMagnitude
+                maxA = -.greatestFiniteMagnitude
+                for j in 0..<corners1.count {
+                    projected = normal.x * corners1[j].x + normal.y * corners1[j].y
+                    minA = min(minA, projected)
+                    maxA = max(maxA, projected)
+                }
+
+                minB = .greatestFiniteMagnitude
+                maxB = -.greatestFiniteMagnitude
+                for j in 0..<corners2.count {
+                    projected = normal.x * corners2[j].x + normal.y * corners2[j].y
+                    minB = min(minB, projected)
+                    maxB = max(maxB, projected)
+                }
+
+                if maxA < minB || maxB < minA {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    private func arePegBlockOverlapping(peg: Peg, block: Block) -> Bool {
+        let blockCorners = cornersOfRotatedRect(block: block)
+        let pegPosition = peg.position
+        let pegRadius = peg.diameter / 2
+
+        // Check if peg's centre is within block
+        guard !isPegInsideBlock(block: block, peg: peg) else {
+            return true
+        }
+
+        // Check if any of rectangle edges intersect the circle
+        for i in 0..<4 {
+            let j = (i + 1) % 4
+            let closestPoint = Utils.closestPointOnLine(to: pegPosition,
+                                                        lineStart: blockCorners[i],
+                                                        lineEnd: blockCorners[j])
+            let distance = sqrt(pow(closestPoint.x - pegPosition.x, 2) + pow(closestPoint.y - pegPosition.y, 2))
+
+            if distance <= pegRadius {
+                return true
+            }
+        }
+
+        return false
     }
 
     private func isPegWithinBoard(boardSize: CGSize, peg: Peg) -> Bool {
@@ -93,6 +198,110 @@ class LevelDesignerValidatorDelegate {
         let y2 = peg.position.y + (peg.diameter / 2.0)
 
         if x1 <= 0 || x2 >= boardSize.width || y1 <= 0 || y2 >= boardSize.height {
+            return false
+        }
+
+        return true
+    }
+
+    private func isBlockWithinBoard(boardSize: CGSize, block: Block) -> Bool {
+        let corners = cornersOfRotatedRect(block: block)
+        for corner in corners where corner.x <= 0
+        || corner.x >= boardSize.width
+        || corner.y <= 0
+        || corner.y >= boardSize.height {
+            return false
+        }
+        return true
+    }
+
+    private func cornersOfRotatedRect(block: Block) -> [CGPoint] {
+        let height = block.height
+        let width = block.width
+        let position = block.position
+        let rotation = block.rotation
+        let halfWidth = width / 2
+        let halfHeight = height / 2
+
+        let vertices = [
+            CGPoint(x: -halfWidth, y: -halfHeight),
+            CGPoint(x: halfWidth, y: -halfHeight),
+            CGPoint(x: halfWidth, y: halfHeight),
+            CGPoint(x: -halfWidth, y: halfHeight)
+        ]
+
+        // Rotation matrix
+        let angleInRadians = rotation * (.pi / 180.0)
+        let cosAngle = cos(angleInRadians)
+        let sinAngle = sin(angleInRadians)
+
+        // Translate to center point and rotate
+        let rotatedVertices = vertices.map { vertex in
+            let x = position.x + vertex.x * cosAngle - vertex.y * sinAngle
+            let y = position.y + vertex.x * sinAngle + vertex.y * cosAngle
+            return CGPoint(x: x, y: y)
+        }
+
+        return rotatedVertices
+    }
+
+    private func isPegInsideBlock(block: Block, peg: Peg) -> Bool {
+        let point = peg.position
+        let blockArea = block.height * block.width
+        let blockCorners = cornersOfRotatedRect(block: block)
+
+        let corner1 = blockCorners[0]
+        let corner2 = blockCorners[1]
+        let corner3 = blockCorners[2]
+        let corner4 = blockCorners[3]
+
+        let triangle1 = areaOfTriangle(p1: corner1, p2: point, p3: corner4)
+        let triangle2 = areaOfTriangle(p1: corner4, p2: point, p3: corner3)
+        let triangle3 = areaOfTriangle(p1: corner3, p2: point, p3: corner2)
+        let triangle4 = areaOfTriangle(p1: corner1, p2: point, p3: corner2)
+
+        return triangle1 + triangle2 + triangle3 + triangle4 <= blockArea
+    }
+
+    private func areaOfTriangle(p1: CGPoint, p2: CGPoint, p3: CGPoint) -> CGFloat {
+        let area = 0.5 * abs((p1.x * (p2.y - p3.y)) + (p2.x * (p3.y - p1.y)) + (p3.x * (p1.y - p2.y)))
+        return area
+    }
+
+    private func isValidBlockModification(block: Block, gameboard: Gameboard) -> Bool {
+        // Check if block is within bound of gameboard
+        guard isBlockWithinBoard(boardSize: gameboard.boardSize, block: block) else {
+            return false
+        }
+
+        // Check for peg overlaps
+        for peg in gameboard.pegs where arePegBlockOverlapping(peg: peg, block: block) {
+            return false
+        }
+
+        // Check for block overlaps
+        for existingBlock in gameboard.blocks
+            where existingBlock != block && areBlocksOverlapping(block1: block, block2: existingBlock) {
+                return false
+        }
+
+        return true
+    }
+
+    private func isValidPegModification(peg: Peg, gameboard: Gameboard) -> Bool {
+        // Check if peg is within bound of gameboard
+        guard isPegWithinBoard(boardSize: gameboard.boardSize, peg: peg) else {
+            return false
+        }
+
+        // Check for peg overlaps
+        for existingPeg in gameboard.pegs
+            where existingPeg != peg && arePegsOverlapping(peg1: peg, peg2: existingPeg) {
+                return false
+        }
+
+        // Check for block overlaps
+        for block in gameboard.blocks where arePegBlockOverlapping(peg: peg, block: block) {
             return false
         }
 

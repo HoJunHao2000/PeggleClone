@@ -15,6 +15,8 @@ class PegCoreDataTranslator {
         entity.x = Double(peg.position.x)
         entity.y = Double(peg.position.y)
         entity.pegtype = Int64(peg.pegtype.rawValue)
+        entity.diameter = peg.diameter
+        entity.rotation = peg.rotation
         return entity
     }
 

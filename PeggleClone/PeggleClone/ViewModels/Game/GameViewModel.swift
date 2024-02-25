@@ -28,6 +28,10 @@ class GameViewModel: ObservableObject {
         gameEngine.pegs
     }
 
+    var pegsRemainingMap: [PegType: Int] {
+        gameEngine.pegsRemainingByType
+    }
+
     var ball: BallGameObject? {
         gameEngine.ball
     }

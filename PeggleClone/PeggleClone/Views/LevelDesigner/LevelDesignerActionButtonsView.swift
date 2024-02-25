@@ -13,7 +13,7 @@ struct LevelDesignerActionButtonsView: View {
     @State private var text: String = ""
     @State private var isSavePresented = false
     @State private var isLoadPresented = false
-    @State private var selectedGameboard: GameboardEntity?
+    @State private var selectedGameboard: UUID?
 
     var body: some View {
         HStack {
@@ -27,6 +27,7 @@ struct LevelDesignerActionButtonsView: View {
                 TextField("Name of level", text: $text)
                 Button("OK", action: {
                     viewModel.saveGameboard(name: text.isEmpty ? viewModel.gameboard.name : text)
+                    selectedGameboard = viewModel.gameboard.id
                 })
                 Button("Cancel", role: .cancel) {
                     isSavePresented = false
@@ -52,16 +53,16 @@ struct LevelDesignerActionButtonsView: View {
         Menu("LOAD") {
             Picker("Current Gameboard", selection: $selectedGameboard) {
                 Text("New Gameboard")
-                    .tag(GameboardEntity?.none)
+                    .tag(UUID?.none)
                 ForEach(viewModel.gameboards, id: \.self) { gameboardEntity in
-                    if let name = gameboardEntity.name {
+                    if let id = gameboardEntity.id, let name = gameboardEntity.name {
                         Text(name)
-                            .tag(GameboardEntity?.some(gameboardEntity))
+                            .tag(UUID?.some(id))
                     }
                 }
             }
             .onChange(of: selectedGameboard) {
-                if let id = selectedGameboard?.id {
+                if let id = selectedGameboard {
                     viewModel.loadGameboard(id: id)
                 } else {
                     viewModel.newGameboard()

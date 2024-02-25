@@ -16,7 +16,7 @@
 import Foundation
 
 class Peg {
-    private static let DEFAULT_PEG_DIAMETER: Double = 50
+    static let DEFAULT_PEG_DIAMETER: Double = 50
     private static let DEFAULT_PEG_ANGLE: Double = 0
 
     let id: UUID
@@ -78,7 +78,7 @@ class Peg {
 
 extension Peg: Hashable {
     static func == (lhs: Peg, rhs: Peg) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id || lhs === rhs
     }
 
     func hash(into hasher: inout Hasher) {

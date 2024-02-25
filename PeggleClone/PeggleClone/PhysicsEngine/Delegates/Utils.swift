@@ -23,7 +23,13 @@ class Utils {
         let projectedPoint = CGPoint(x: point.x - distanceFromLine * lineNormal.dx,
                                      y: point.y - distanceFromLine * lineNormal.dy)
 
-        return projectedPoint
+        // Clamp the projected point to the line segment
+        let clampedPoint = CGPoint(x: max(min(projectedPoint.x, max(lineStart.x, lineEnd.x)),
+                                          min(lineStart.x, lineEnd.x)),
+                                    y: max(min(projectedPoint.y, max(lineStart.y, lineEnd.y)),
+                                           min(lineStart.y, lineEnd.y)))
+
+        return clampedPoint
     }
 
     static func dotProduct(_ v1: CGVector, _ v2: CGVector) -> CGFloat {

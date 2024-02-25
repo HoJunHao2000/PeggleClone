@@ -14,7 +14,7 @@ class CoreDataManager {
     static let instance = CoreDataManager()
 
     init() {
-        self.container = NSPersistentContainer(name: "LevelDesignerData")
+        self.container = NSPersistentContainer(name: "GameData")
         self.container.loadPersistentStores { _, error in
             if let error = error {
                 print("Error loading Core Data: \(error)")
@@ -29,5 +29,19 @@ class CoreDataManager {
         } catch {
             print("Error saving Core Data: \(error.localizedDescription)")
         }
+    }
+
+    func reset() {
+        let request = NSFetchRequest<GameboardEntity>(entityName: "GameboardEntity")
+        do {
+            let gameboards = try context.fetch(request)
+            for gamemboard in gameboards {
+                context.delete(gamemboard)
+            }
+            save()
+        } catch {
+            print("Error reseting coredata: \(error)")
+        }
+
     }
 }
