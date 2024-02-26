@@ -24,6 +24,10 @@ class GameViewModel: ObservableObject {
         self.lag = 0
     }
 
+    var blocks: [BlockGameObject] {
+        gameEngine.blocks
+    }
+
     var pegs: [PegGameObject] {
         gameEngine.pegs
     }
@@ -46,6 +50,10 @@ class GameViewModel: ObservableObject {
 
     var isGameOver: Bool {
         gameEngine.isGameOver
+    }
+
+    var isWin: Bool {
+        gameEngine.isWin
     }
 
     var ballsRemaining: Int {

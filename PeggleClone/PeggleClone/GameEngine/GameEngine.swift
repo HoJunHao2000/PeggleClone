@@ -39,22 +39,28 @@ class GameEngine {
 
     private(set) var physicsEngine: PhysicsEngine
     private(set) var pegs: [PegGameObject]
+    private(set) var blocks: [BlockGameObject]
     private(set) var removedPegs: Set<PegGameObject>
     private(set) var ball: BallGameObject?
     private(set) var score: Int = 0
     private(set) var ballsRemaining: Int
     private(set) var pegsRemainingByType: [PegType: Int]
 
+    private var pegHitsCount: [PegType: Int]
+
     init(gameboard: Gameboard) {
         self.physicsEngine = PhysicsEngine()
         self.gameboard = gameboard
         self.pegs = []
+        self.blocks = []
         self.removedPegs = []
         self.score = 0
         self.ballsRemaining = GameEngine.INITIAL_NUMBER_OF_BALLS
         self.pegsRemainingByType = [:]
+        self.pegHitsCount = [:]
 
         addPegsIntoGame(pegs: gameboard.pegs)
+        addBlocksIntoGame(blocks: gameboard.blocks)
         addPhysicsBoundary(boardSize: gameboard.boardSize)
 
         assert(checkRepresentation())
@@ -84,7 +90,13 @@ class GameEngine {
     var isGameOver: Bool {
         assert(checkRepresentation())
 
-        return (ballsRemaining == 0 && ball == nil) || pegs.count == removedPegs.count
+        return (ballsRemaining == 0 && ball == nil) && pegsRemainingByType[.GoalPeg, default: 1] > 0
+    }
+
+    var isWin: Bool {
+        assert(checkRepresentation())
+
+        return ballsRemaining >= 0 && pegsRemainingByType[.GoalPeg, default: 0] == 0
     }
 
     func launchBall(point: CGPoint) {
@@ -122,11 +134,14 @@ class GameEngine {
         physicsEngine = PhysicsEngine()
         pegs = []
         removedPegs = []
+        pegsRemainingByType = [:]
+        pegHitsCount = [:]
         ball = nil
         score = 0
         ballsRemaining = GameEngine.INITIAL_NUMBER_OF_BALLS
 
         addPegsIntoGame(pegs: gameboard.pegs)
+        addBlocksIntoGame(blocks: gameboard.blocks)
         addPhysicsBoundary(boardSize: gameboard.boardSize)
 
         assert(checkRepresentation())
@@ -142,16 +157,19 @@ class GameEngine {
 
     private func addPegsIntoGame(pegs: [Peg]) {
         for peg in pegs {
-            if let count = pegsRemainingByType[peg.pegtype] {
-                pegsRemainingByType[peg.pegtype] = count + 1
-            } else {
-                pegsRemainingByType[peg.pegtype] = 1
-            }
+            pegsRemainingByType[peg.pegtype, default: 0] += 1
 
             let pegGameObject = PegGameObject(peg: peg)
-
             self.pegs.append(pegGameObject)
             physicsEngine.addPhysicsObject(physicsObject: pegGameObject.physicsObject)
+        }
+    }
+
+    private func addBlocksIntoGame(blocks: [Block]) {
+        for block in blocks {
+            let blockGameObject = BlockGameObject(block: block)
+            self.blocks.append(blockGameObject)
+            physicsEngine.addPhysicsObject(physicsObject: blockGameObject.physicsObject)
         }
     }
 
@@ -204,11 +222,44 @@ class GameEngine {
             }
 
             physicsEngine.removePhysicsObject(physicsObject: peg.physicsObject)
-            score += 1
+            pegHitsCount[peg.pegtype, default: 0] += 1
             removedPegs.insert(peg)
         }
 
+        addAttemptScore()
         resetHitCount()
+    }
+
+    private func addAttemptScore() {
+        let pegPointMap: [PegType: Int] = [
+            .NormalPeg: 10,
+            .GoalPeg: 100,
+            .PowerUpPeg: 10,
+            .HealthPeg: 30,
+            .StubbornPeg: 20
+        ]
+
+        let numOfOrangeLeft = pegsRemainingByType[.GoalPeg] ?? 0
+
+        var multiplier: Int = 1
+        if numOfOrangeLeft == 0 {
+            multiplier = 100
+        } else if numOfOrangeLeft < 4 {
+            multiplier = 10
+        } else if numOfOrangeLeft < 8 {
+            multiplier = 5
+        } else if numOfOrangeLeft < 11 {
+            multiplier = 3
+        }
+
+        var totalScore = 0
+        for (pegType, count) in pegHitsCount {
+            let basePoints = pegPointMap[pegType] ?? 0
+            totalScore += basePoints * count
+        }
+
+        score += (totalScore * multiplier)
+        pegHitsCount = [:]
     }
 
     private func removePegsPremature() {
@@ -218,7 +269,7 @@ class GameEngine {
             }
 
             physicsEngine.removePhysicsObject(physicsObject: peg.physicsObject)
-            score += 1
+            pegHitsCount[peg.pegtype, default: 0] += 1
             removedPegs.insert(peg)
         }
     }
@@ -231,11 +282,6 @@ class GameEngine {
 
         // number of removed pegs must be not more than number of pegs
         guard removedPegs.count <= pegs.count else {
-            return false
-        }
-
-        // for now as each peg is 1 point, the score must equal the number of removed pegs
-        guard score >= 0 && score == removedPegs.count else {
             return false
         }
 

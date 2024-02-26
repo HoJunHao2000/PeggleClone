@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct GameView: View {
-    @Environment(\.dismiss) var dismiss
-
     @ObservedObject var gameViewModel: GameViewModel
 
     init(gameboard: Gameboard) {
@@ -18,8 +16,8 @@ struct GameView: View {
 
     var body: some View {
         VStack {
-            gameLevelView
-            statsView
+            GameLevelView(gameViewModel: gameViewModel)
+            StatsView(gameViewModel: gameViewModel)
         }
         .alert("Game Over",
                isPresented: Binding(get: { gameViewModel.isGameOver }, set: { _, _ in }),
@@ -32,13 +30,29 @@ struct GameView: View {
                message: {
                    Text("Your Score: \(gameViewModel.score)")
                })
+        .alert("You Won!",
+               isPresented: Binding(get: { gameViewModel.isWin }, set: { _, _ in }),
+               actions: {
+                   Button("Replay", action: { gameViewModel.reset() })
+                       .onAppear(perform: {
+                           gameViewModel.end()
+                       })
+               },
+               message: {
+                   Text("Your Score: \(gameViewModel.score)")
+               })
     }
+}
 
-    private var gameLevelView: some View {
+private struct GameLevelView: View {
+    @ObservedObject var gameViewModel: GameViewModel
+
+    var body: some View {
         ZStack {
             boardView
             cannonView
             pegsView
+            blocksView
             if let ball = gameViewModel.ball {
                 ballView(ball: ball)
             }
@@ -145,7 +159,25 @@ struct GameView: View {
         pegView(imageName: isLit ? "peg-yellow-glow" : "peg-yellow", width: width, position: position)
     }
 
-    private var statsView: some View {
+    private var blocksView: some View {
+        let blocks = gameViewModel.blocks
+
+        return ForEach(blocks, id: \.self) { block in
+            RoundedRectangle(cornerRadius: 10)
+                .fill(.black)
+                .frame(width: block.width, height: block.height)
+                .rotationEffect(.degrees(block.rotation))
+                .position(block.position)
+        }
+    }
+}
+
+private struct StatsView: View {
+    @Environment(\.dismiss) var dismiss
+
+    @ObservedObject var gameViewModel: GameViewModel
+
+    var body: some View {
         VStack {
             topRowStatisticsView
             Spacer()

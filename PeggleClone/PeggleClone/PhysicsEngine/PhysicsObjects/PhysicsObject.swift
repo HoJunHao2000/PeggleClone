@@ -21,8 +21,8 @@ It defines the properties and behaviors of the object, such as its position, vel
 import Foundation
 
 class PhysicsObject {
-    private static let DEFAULT_MASS = Double.infinity
-    private static let DEFAULT_ELASTICITY: Double = 1
+    static let DEFAULT_MASS = Double.infinity
+    static let DEFAULT_ELASTICITY: Double = 1
 
     private(set) var position: CGPoint
     private(set) var velocity: CGVector

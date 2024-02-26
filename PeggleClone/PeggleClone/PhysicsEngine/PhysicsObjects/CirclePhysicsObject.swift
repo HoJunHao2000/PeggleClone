@@ -15,8 +15,8 @@ class CirclePhysicsObject: PhysicsObject {
          force: CGVector,
          isMoveable: Bool,
          diameter: Double,
-         mass: Double,
-         elasticity: Double) {
+         elasticity: Double,
+         mass: Double = PhysicsObject.DEFAULT_MASS) {
         self.diameter = diameter
         super.init(position: position,
                    velocity: velocity,
@@ -24,19 +24,5 @@ class CirclePhysicsObject: PhysicsObject {
                    isMoveable: isMoveable,
                    elasticity: elasticity,
                    mass: mass)
-    }
-
-    init(position: CGPoint,
-         velocity: CGVector,
-         force: CGVector,
-         isMoveable: Bool,
-         diameter: Double,
-         elasticity: Double) {
-        self.diameter = diameter
-        super.init(position: position,
-                   velocity: velocity,
-                   force: force,
-                   isMoveable: isMoveable,
-                   elasticity: elasticity)
     }
 }

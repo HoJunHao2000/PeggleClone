@@ -28,8 +28,8 @@ class BallGameObject {
                                                  force: initialForce,
                                                  isMoveable: true,
                                                  diameter: BallGameObject.DEFAULT_BALL_DIAMETER,
-                                                 mass: BallGameObject.DEFAULT_BALL_MASS,
-                                                 elasticity: BallGameObject.DEFAULT_BALL_ELASTICITY)
+                                                 elasticity: BallGameObject.DEFAULT_BALL_ELASTICITY,
+                                                 mass: BallGameObject.DEFAULT_BALL_MASS)
     }
 
     var position: CGPoint {

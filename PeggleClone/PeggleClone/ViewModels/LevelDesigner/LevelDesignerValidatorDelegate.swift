@@ -103,7 +103,7 @@ class LevelDesignerValidatorDelegate {
 
         block.setHeight(newHeight: newHeight)
         let result = isValidBlockModification(block: block, gameboard: gameboard)
-        block.setRotation(newAngle: oldBlockHeight)
+        block.setHeight(newHeight: oldBlockHeight)
 
         return result
     }
@@ -119,14 +119,18 @@ class LevelDesignerValidatorDelegate {
     }
 
     private func arePegsOverlapping(peg1: Peg, peg2: Peg) -> Bool {
-        let distance = sqrt(pow(peg1.position.x - peg2.position.x, 2) + pow(peg1.position.y - peg2.position.y, 2))
+        let distance = Utils.distanceBetween(point1: peg1.position, point2: peg2.position)
         let combinedRadius = (peg1.diameter / 2) + (peg2.diameter / 2)
         return distance <= combinedRadius
     }
 
     private func areBlocksOverlapping(block1: Block, block2: Block) -> Bool {
-        let corners1 = cornersOfRotatedRect(block: block1)
-        let corners2 = cornersOfRotatedRect(block: block2)
+        let corners1 = Utils.cornersOfRect(size: block1.size,
+                                           position: block1.position,
+                                           rotation: block1.rotation)
+        let corners2 = Utils.cornersOfRect(size: block2.size,
+                                           position: block2.position,
+                                           rotation: block2.rotation)
 
         let polygons = [corners1, corners2]
         var minA, maxA, projected, minB, maxB: Double
@@ -166,7 +170,9 @@ class LevelDesignerValidatorDelegate {
     }
 
     private func arePegBlockOverlapping(peg: Peg, block: Block) -> Bool {
-        let blockCorners = cornersOfRotatedRect(block: block)
+        let blockCorners = Utils.cornersOfRect(size: block.size,
+                                               position: block.position,
+                                               rotation: block.rotation)
         let pegPosition = peg.position
         let pegRadius = peg.diameter / 2
 
@@ -181,7 +187,7 @@ class LevelDesignerValidatorDelegate {
             let closestPoint = Utils.closestPointOnLine(to: pegPosition,
                                                         lineStart: blockCorners[i],
                                                         lineEnd: blockCorners[j])
-            let distance = sqrt(pow(closestPoint.x - pegPosition.x, 2) + pow(closestPoint.y - pegPosition.y, 2))
+            let distance = Utils.distanceBetween(point1: closestPoint, point2: pegPosition)
 
             if distance <= pegRadius {
                 return true
@@ -205,7 +211,9 @@ class LevelDesignerValidatorDelegate {
     }
 
     private func isBlockWithinBoard(boardSize: CGSize, block: Block) -> Bool {
-        let corners = cornersOfRotatedRect(block: block)
+        let corners = Utils.cornersOfRect(size: block.size,
+                                          position: block.position,
+                                          rotation: block.rotation)
         for corner in corners where corner.x <= 0
         || corner.x >= boardSize.width
         || corner.y <= 0
@@ -215,57 +223,24 @@ class LevelDesignerValidatorDelegate {
         return true
     }
 
-    private func cornersOfRotatedRect(block: Block) -> [CGPoint] {
-        let height = block.height
-        let width = block.width
-        let position = block.position
-        let rotation = block.rotation
-        let halfWidth = width / 2
-        let halfHeight = height / 2
-
-        let vertices = [
-            CGPoint(x: -halfWidth, y: -halfHeight),
-            CGPoint(x: halfWidth, y: -halfHeight),
-            CGPoint(x: halfWidth, y: halfHeight),
-            CGPoint(x: -halfWidth, y: halfHeight)
-        ]
-
-        // Rotation matrix
-        let angleInRadians = rotation * (.pi / 180.0)
-        let cosAngle = cos(angleInRadians)
-        let sinAngle = sin(angleInRadians)
-
-        // Translate to center point and rotate
-        let rotatedVertices = vertices.map { vertex in
-            let x = position.x + vertex.x * cosAngle - vertex.y * sinAngle
-            let y = position.y + vertex.x * sinAngle + vertex.y * cosAngle
-            return CGPoint(x: x, y: y)
-        }
-
-        return rotatedVertices
-    }
-
     private func isPegInsideBlock(block: Block, peg: Peg) -> Bool {
         let point = peg.position
         let blockArea = block.height * block.width
-        let blockCorners = cornersOfRotatedRect(block: block)
+        let blockCorners = Utils.cornersOfRect(size: block.size,
+                                               position: block.position,
+                                               rotation: block.rotation)
 
         let corner1 = blockCorners[0]
         let corner2 = blockCorners[1]
         let corner3 = blockCorners[2]
         let corner4 = blockCorners[3]
 
-        let triangle1 = areaOfTriangle(p1: corner1, p2: point, p3: corner4)
-        let triangle2 = areaOfTriangle(p1: corner4, p2: point, p3: corner3)
-        let triangle3 = areaOfTriangle(p1: corner3, p2: point, p3: corner2)
-        let triangle4 = areaOfTriangle(p1: corner1, p2: point, p3: corner2)
+        let triangle1 = Utils.areaOfTriangle(p1: corner1, p2: point, p3: corner4)
+        let triangle2 = Utils.areaOfTriangle(p1: corner4, p2: point, p3: corner3)
+        let triangle3 = Utils.areaOfTriangle(p1: corner3, p2: point, p3: corner2)
+        let triangle4 = Utils.areaOfTriangle(p1: corner1, p2: point, p3: corner2)
 
         return triangle1 + triangle2 + triangle3 + triangle4 <= blockArea
-    }
-
-    private func areaOfTriangle(p1: CGPoint, p2: CGPoint, p3: CGPoint) -> CGFloat {
-        let area = 0.5 * abs((p1.x * (p2.y - p3.y)) + (p2.x * (p3.y - p1.y)) + (p3.x * (p1.y - p2.y)))
-        return area
     }
 
     private func isValidBlockModification(block: Block, gameboard: Gameboard) -> Bool {

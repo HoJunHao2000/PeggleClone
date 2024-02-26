@@ -106,7 +106,7 @@ private struct GameboardView: View {
 
         return ZStack {
             ForEach(blocks, id: \.self) { block in
-                Rectangle()
+                RoundedRectangle(cornerRadius: 10)
                     .fill(.black)
                     .frame(width: block.width, height: block.height)
                     .rotationEffect(.degrees(block.rotation))
@@ -314,10 +314,9 @@ private struct ButtonsView: View {
             viewModel.setPegType(pegtype: nil)
         }) {
             ZStack {
-                Rectangle()
+                RoundedRectangle(cornerRadius: 10)
                     .fill(.black)
                     .frame(width: 40, height: 75)
-                    .cornerRadius(10)
                     .opacity(viewModel.pegtype == nil ? 1.0 : 0.5)
                 Text("\(viewModel.gameboard.blocks.count)")
                     .foregroundColor(.black)

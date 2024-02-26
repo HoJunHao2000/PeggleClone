@@ -44,6 +44,10 @@ class LevelDesignerViewModel: ObservableObject {
         coreDataDelegate.getGameboards()
     }
 
+    var hasMinOneGoalPeg: Bool {
+        gameboard.pegs.contains(where: { $0.pegtype == .GoalPeg })
+    }
+
     /// Loads a gameboard with the specified identifier.
     /// - Parameter id: The unique identifier of the gameboard to be loaded.
     func loadGameboard(id: UUID) {

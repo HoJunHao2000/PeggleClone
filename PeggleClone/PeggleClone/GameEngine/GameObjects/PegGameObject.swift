@@ -21,7 +21,7 @@ class PegGameObject {
     private static let DEFAULT_PEG_ELASTICITY: Double = 0.6
 
     private(set) var physicsObject: CirclePhysicsObject
-    let peg: Peg
+    let pegtype: PegType
 
     init(peg: Peg) {
         self.physicsObject = CirclePhysicsObject(position: peg.position,
@@ -30,11 +30,7 @@ class PegGameObject {
                                                  isMoveable: false,
                                                  diameter: peg.diameter,
                                                  elasticity: PegGameObject.DEFAULT_PEG_ELASTICITY)
-        self.peg = peg
-    }
-
-    var pegtype: PegType {
-        peg.pegtype
+        self.pegtype = peg.pegtype
     }
 
     var diameter: Double {

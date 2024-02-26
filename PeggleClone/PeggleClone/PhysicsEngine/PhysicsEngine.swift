@@ -57,7 +57,6 @@ class PhysicsEngine {
         guard intersector.intersects(object1: objectA, object2: objectB) else {
             return
         }
-
         collisionHandler.handleCollision(object1: objectA, object2: objectB)
     }
 

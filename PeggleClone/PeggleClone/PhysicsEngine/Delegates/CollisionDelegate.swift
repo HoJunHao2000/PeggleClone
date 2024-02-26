@@ -11,10 +11,14 @@ class CollisionDelegate {
     func handleCollision(object1: PhysicsObject, object2: PhysicsObject) {
         if let circleObj1 = object1 as? CirclePhysicsObject, let circleObj2 = object2 as? CirclePhysicsObject {
             handleCircleCircleCollision(circle1: circleObj1, circle2: circleObj2)
-        } else if let circleObj = object1 as? CirclePhysicsObject, let lineObj = object2 as? LinePhysicsObject {
-            handleCircleLineCollision(circle: circleObj, line: lineObj)
-        } else if let lineObj = object1 as? LinePhysicsObject, let circleObj = object2 as? CirclePhysicsObject {
-            handleCircleLineCollision(circle: circleObj, line: lineObj)
+        } else if let circle = object1 as? CirclePhysicsObject, let line = object2 as? LinePhysicsObject {
+            handleCircleLineCollision(circle: circle, line: line)
+        } else if let line = object1 as? LinePhysicsObject, let circle = object2 as? CirclePhysicsObject {
+            handleCircleLineCollision(circle: circle, line: line)
+        } else if let circle = object1 as? CirclePhysicsObject, let block = object2 as? BlockPhysicsObject {
+            handleCircleBlockCollision(circle: circle, block: block)
+        } else if let block = object1 as? BlockPhysicsObject, let circle = object2 as? CirclePhysicsObject {
+            handleCircleBlockCollision(circle: circle, block: block)
         } else {
             return
         }
@@ -28,8 +32,7 @@ class CollisionDelegate {
         // Reflect circle velocity and scale it with line elasticity
         let lineVector = CGVector(dx: line.endPoint.x - line.startPoint.x, dy: line.endPoint.y - line.startPoint.y)
         let lineNormal = Utils.normalize(CGVector(dx: -lineVector.dy, dy: lineVector.dx))
-        let circleVelocity = CGVector(dx: circle.velocity.dx, dy: circle.velocity.dy)
-        let reflectedVelocity = Utils.reflect(circleVelocity, lineNormal)
+        let reflectedVelocity = Utils.reflect(circle.velocity, lineNormal)
         let scaledVelocity = Utils.scaleBy(reflectedVelocity, n: line.elasticity)
         circle.setVelocity(newVelocity: scaledVelocity)
 
@@ -104,5 +107,49 @@ class CollisionDelegate {
             circle2.setPosition(newPosition: CGPoint(x: circle2.position.x + adjustmentVector2.dx,
                                                      y: circle2.position.y + adjustmentVector2.dy))
         }
+    }
+
+    private func handleCircleBlockCollision(circle: CirclePhysicsObject, block: BlockPhysicsObject) {
+        guard circle.isMoveable else {
+            return
+        }
+
+        let blockCorners = Utils.cornersOfRect(size: block.size, position: block.position, rotation: block.rotation)
+
+        // Find the edge of the block that is closest to the circle
+        var startPoint: CGPoint = .zero
+        var endPoint: CGPoint = .zero
+        var distanceFromLine: Double = CGFloat.greatestFiniteMagnitude
+        for i in 0..<4 {
+            let corner1 = blockCorners[i]
+            let corner2 = blockCorners[(i + 1) % 4]
+            let closestPoint = Utils.closestPointOnLine(to: circle.position, lineStart: corner1, lineEnd: corner2)
+            let distance = Utils.distanceBetween(point1: closestPoint, point2: circle.position)
+            if distance < distanceFromLine {
+                startPoint = corner1
+                endPoint = corner2
+                distanceFromLine = distance
+            }
+        }
+
+        // Get the normal vector from the closest edge
+        let lineVector = CGVector(dx: endPoint.x - startPoint.x, dy: endPoint.y - startPoint.y)
+        let lineNormal = Utils.normalize(CGVector(dx: lineVector.dy, dy: -lineVector.dx))
+        let reflectedVelocity = Utils.reflect(circle.velocity, lineNormal)
+        let isLeft = Utils.isBallOnLeftSide(startpoint: startPoint, endpoint: endPoint, point: circle.position)
+        let scaledVelocity = Utils.scaleBy(reflectedVelocity, n: block.elasticity)
+        circle.setVelocity(newVelocity: scaledVelocity)
+
+        // Calculate overlap and adjustment vector
+        var overlap = ((circle.diameter / 2) - distanceFromLine) * 1.001
+        if !isLeft {
+            overlap += (circle.diameter / 2)
+        }
+
+        let adjustmentVector = CGVector(dx: lineNormal.dx * overlap, dy: lineNormal.dy * overlap)
+
+        // Adjust circle position to move it outside the line
+        circle.setPosition(newPosition: CGPoint(x: circle.position.x + adjustmentVector.dx,
+                                                y: circle.position.y + adjustmentVector.dy))
     }
 }

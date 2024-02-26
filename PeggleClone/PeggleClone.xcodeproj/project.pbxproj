@@ -33,7 +33,6 @@
 		464B06AC2B89E09900DD1A95 /* LevelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */; };
 		464B06AE2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */; };
 		464B06B02B8AE59E00DD1A95 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AF2B8AE59E00DD1A95 /* Block.swift */; };
-		464B06B22B8B0A4600DD1A95 /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06B12B8B0A4600DD1A95 /* CGRect.swift */; };
 		46F4BAAC2B837A0C00890223 /* Gameboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAB2B837A0C00890223 /* Gameboard.swift */; };
 		46F4BAAE2B837A2700890223 /* Peg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAD2B837A2700890223 /* Peg.swift */; };
 		46F4BAB02B837A5500890223 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAF2B837A5500890223 /* CoreDataManager.swift */; };
@@ -41,6 +40,9 @@
 		46F4BAB72B837AF400890223 /* LevelDesignerActionButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAB62B837AF400890223 /* LevelDesignerActionButtonsView.swift */; };
 		46F4BAB92B837B1B00890223 /* LevelDesignerBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAB82B837B1B00890223 /* LevelDesignerBoardView.swift */; };
 		46F4BABB2B837B3100890223 /* LevelDesignerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BABA2B837B3100890223 /* LevelDesignerView.swift */; };
+		46F92F372B8C2E0700E81B79 /* BlockGameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F92F362B8C2E0700E81B79 /* BlockGameObject.swift */; };
+		46F92F392B8C352400E81B79 /* BlockPhysicsObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F92F382B8C352400E81B79 /* BlockPhysicsObject.swift */; };
+		46F92F3B2B8C3AE000E81B79 /* BlockCoreDataTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F92F3A2B8C3AE000E81B79 /* BlockCoreDataTranslator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,7 +84,6 @@
 		464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectorView.swift; sourceTree = "<group>"; };
 		464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectorViewModel.swift; sourceTree = "<group>"; };
 		464B06AF2B8AE59E00DD1A95 /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
-		464B06B12B8B0A4600DD1A95 /* CGRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
 		46F4BAAB2B837A0C00890223 /* Gameboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gameboard.swift; sourceTree = "<group>"; };
 		46F4BAAD2B837A2700890223 /* Peg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peg.swift; sourceTree = "<group>"; };
 		46F4BAAF2B837A5500890223 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
@@ -90,6 +91,9 @@
 		46F4BAB62B837AF400890223 /* LevelDesignerActionButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDesignerActionButtonsView.swift; sourceTree = "<group>"; };
 		46F4BAB82B837B1B00890223 /* LevelDesignerBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDesignerBoardView.swift; sourceTree = "<group>"; };
 		46F4BABA2B837B3100890223 /* LevelDesignerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDesignerView.swift; sourceTree = "<group>"; };
+		46F92F362B8C2E0700E81B79 /* BlockGameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockGameObject.swift; sourceTree = "<group>"; };
+		46F92F382B8C352400E81B79 /* BlockPhysicsObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockPhysicsObject.swift; sourceTree = "<group>"; };
+		46F92F3A2B8C3AE000E81B79 /* BlockCoreDataTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockCoreDataTranslator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +128,7 @@
 			children = (
 				462845552B88909F003E40D8 /* BallGameObject.swift */,
 				462845572B8890E7003E40D8 /* PegGameObject.swift */,
+				46F92F362B8C2E0700E81B79 /* BlockGameObject.swift */,
 			);
 			path = GameObjects;
 			sourceTree = "<group>";
@@ -134,6 +139,7 @@
 				4628455C2B88913E003E40D8 /* PhysicsObject.swift */,
 				4628455E2B889150003E40D8 /* CirclePhysicsObject.swift */,
 				462845602B889161003E40D8 /* LinePhysicsObject.swift */,
+				46F92F382B8C352400E81B79 /* BlockPhysicsObject.swift */,
 			);
 			path = PhysicsObjects;
 			sourceTree = "<group>";
@@ -205,6 +211,7 @@
 				46F4BAAF2B837A5500890223 /* CoreDataManager.swift */,
 				462845412B8839A4003E40D8 /* GameboardCoreDataTranslator.swift */,
 				462845432B883A3A003E40D8 /* PegCoreDataTranslator.swift */,
+				46F92F3A2B8C3AE000E81B79 /* BlockCoreDataTranslator.swift */,
 				462845692B891BB1003E40D8 /* GameData.xcdatamodeld */,
 			);
 			path = CoreData;
@@ -216,7 +223,6 @@
 				46F4BAAB2B837A0C00890223 /* Gameboard.swift */,
 				46F4BAAD2B837A2700890223 /* Peg.swift */,
 				464B06AF2B8AE59E00DD1A95 /* Block.swift */,
-				464B06B12B8B0A4600DD1A95 /* CGRect.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -424,6 +430,7 @@
 				4628454A2B886DCF003E40D8 /* LevelDesignerValidatorDelegate.swift in Sources */,
 				462845682B8891E3003E40D8 /* Utils.swift in Sources */,
 				462845512B889050003E40D8 /* GameViewModel.swift in Sources */,
+				46F92F3B2B8C3AE000E81B79 /* BlockCoreDataTranslator.swift in Sources */,
 				4628454D2B888FB6003E40D8 /* GameView.swift in Sources */,
 				46F4BAB92B837B1B00890223 /* LevelDesignerBoardView.swift in Sources */,
 				462845462B884872003E40D8 /* PegType.swift in Sources */,
@@ -431,6 +438,7 @@
 				4628455D2B88913E003E40D8 /* PhysicsObject.swift in Sources */,
 				46F4BAB72B837AF400890223 /* LevelDesignerActionButtonsView.swift in Sources */,
 				46F4BAAC2B837A0C00890223 /* Gameboard.swift in Sources */,
+				46F92F372B8C2E0700E81B79 /* BlockGameObject.swift in Sources */,
 				464B06AC2B89E09900DD1A95 /* LevelSelectorView.swift in Sources */,
 				462845582B8890E7003E40D8 /* PegGameObject.swift in Sources */,
 				462845612B889161003E40D8 /* LinePhysicsObject.swift in Sources */,
@@ -440,9 +448,9 @@
 				464B06AA2B89D14100DD1A95 /* MainView.swift in Sources */,
 				462845562B88909F003E40D8 /* BallGameObject.swift in Sources */,
 				462845642B8891A3003E40D8 /* CollisionDelegate.swift in Sources */,
+				46F92F392B8C352400E81B79 /* BlockPhysicsObject.swift in Sources */,
 				464B06AE2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift in Sources */,
 				4628455F2B889150003E40D8 /* CirclePhysicsObject.swift in Sources */,
-				464B06B22B8B0A4600DD1A95 /* CGRect.swift in Sources */,
 				46F4BABB2B837B3100890223 /* LevelDesignerView.swift in Sources */,
 				4628456B2B891BB1003E40D8 /* GameData.xcdatamodeld in Sources */,
 				464B06B02B8AE59E00DD1A95 /* Block.swift in Sources */,
