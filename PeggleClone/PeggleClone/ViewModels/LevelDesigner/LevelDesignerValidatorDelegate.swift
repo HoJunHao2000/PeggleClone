@@ -26,6 +26,11 @@ class LevelDesignerValidatorDelegate {
             return false
         }
 
+        // Checks if peg is in bucket region
+        guard !isPegInBucketRegion(peg: newPeg, gameboard: gameboard) else {
+            return false
+        }
+
         // Checks if peg overlaps with other pegs
         for peg in gameboard.pegs where arePegsOverlapping(peg1: newPeg, peg2: peg) {
             return false
@@ -42,6 +47,11 @@ class LevelDesignerValidatorDelegate {
     func isValidLocation(newBlock: Block, gameboard: Gameboard) -> Bool {
         // Checks if newBlock is within bounds of gameboard
         guard isBlockWithinBoard(boardSize: gameboard.boardSize, block: newBlock) else {
+            return false
+        }
+
+        // Checks if block is in bucket region
+        guard !isBlockInBucketRegion(block: newBlock, gameboard: gameboard) else {
             return false
         }
 
@@ -249,6 +259,11 @@ class LevelDesignerValidatorDelegate {
             return false
         }
 
+        // Checks if block is in bucket region
+        guard !isBlockInBucketRegion(block: block, gameboard: gameboard) else {
+            return false
+        }
+
         // Check for peg overlaps
         for peg in gameboard.pegs where arePegBlockOverlapping(peg: peg, block: block) {
             return false
@@ -256,8 +271,8 @@ class LevelDesignerValidatorDelegate {
 
         // Check for block overlaps
         for existingBlock in gameboard.blocks
-            where existingBlock != block && areBlocksOverlapping(block1: block, block2: existingBlock) {
-                return false
+        where existingBlock != block && areBlocksOverlapping(block1: block, block2: existingBlock) {
+            return false
         }
 
         return true
@@ -269,10 +284,15 @@ class LevelDesignerValidatorDelegate {
             return false
         }
 
+        // Checks if peg is in bucket region
+        guard !isPegInBucketRegion(peg: peg, gameboard: gameboard) else {
+            return false
+        }
+
         // Check for peg overlaps
         for existingPeg in gameboard.pegs
-            where existingPeg != peg && arePegsOverlapping(peg1: peg, peg2: existingPeg) {
-                return false
+        where existingPeg != peg && arePegsOverlapping(peg1: peg, peg2: existingPeg) {
+            return false
         }
 
         // Check for block overlaps
@@ -281,5 +301,31 @@ class LevelDesignerValidatorDelegate {
         }
 
         return true
+    }
+
+    private func isPegInBucketRegion(peg: Peg, gameboard: Gameboard) -> Bool {
+        let positionY = peg.position.y
+        let radius = peg.diameter / 2
+        let bucketHeight = 100.0
+        let bottomOfBoard = gameboard.boardSize.height
+
+        if positionY + radius + bucketHeight >= bottomOfBoard {
+            return true
+        }
+
+        return false
+    }
+
+    private func isBlockInBucketRegion(block: Block, gameboard: Gameboard) -> Bool {
+        let cornersOfBlock = Utils.cornersOfRect(size: block.size, position: block.position, rotation: block.rotation)
+        let maxY = cornersOfBlock.max(by: { $0.y < $1.y })?.y ?? 0
+        let bucketHeight = 100.0
+        let bottomOfBoard = gameboard.boardSize.height
+
+        if maxY + bucketHeight >= bottomOfBoard {
+            return true
+        }
+
+        return false
     }
 }

@@ -10,7 +10,8 @@ import Foundation
 enum PegType: Int {
     case NormalPeg = 0
     case GoalPeg = 1
-    case PowerUpPeg = 2
+    case KaboomPeg = 2
     case HealthPeg = 3
     case StubbornPeg = 4
+    case SpookyPeg = 5
 }

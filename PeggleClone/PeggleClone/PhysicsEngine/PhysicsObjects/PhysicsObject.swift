@@ -48,8 +48,20 @@ class PhysicsObject {
         self.elasticity = elasticity
     }
 
+    var isFirstHit: Bool {
+        hitCount == 1
+    }
+
     func incrementHitCount() {
         hitCount += 1
+    }
+
+    func setHitCount(newHitCount: Int) {
+        guard newHitCount > 0 else {
+            return
+        }
+
+        hitCount = newHitCount
     }
 
     func setVelocity(newVelocity: CGVector) {

@@ -32,7 +32,7 @@ import Foundation
 
 class GameEngine {
     private static let INITIAL_NUMBER_OF_BALLS = 10
-    private static let INIITAL_BALL_SPEED: Double = 1_200
+    static let INIITAL_BALL_SPEED: Double = 1_200
     private static let GRAVITY = CGVector(dx: 0.0, dy: 981)
 
     let gameboard: Gameboard
@@ -40,11 +40,13 @@ class GameEngine {
     private(set) var physicsEngine: PhysicsEngine
     private(set) var pegs: [PegGameObject]
     private(set) var blocks: [BlockGameObject]
+    private(set) var bucket: BucketGameObject
     private(set) var removedPegs: Set<PegGameObject>
     private(set) var ball: BallGameObject?
-    private(set) var score: Int = 0
+    private(set) var score: Int
     private(set) var ballsRemaining: Int
     private(set) var pegsRemainingByType: [PegType: Int]
+    private(set) var isSpooky: Bool
 
     private var pegHitsCount: [PegType: Int]
 
@@ -58,9 +60,11 @@ class GameEngine {
         self.ballsRemaining = GameEngine.INITIAL_NUMBER_OF_BALLS
         self.pegsRemainingByType = [:]
         self.pegHitsCount = [:]
+        self.bucket = BucketGameObject(boardSize: gameboard.boardSize)
+        self.isSpooky = false
 
-        addPegsIntoGame(pegs: gameboard.pegs)
-        addBlocksIntoGame(blocks: gameboard.blocks)
+        physicsEngine.addPhysicsObject(physicsObject: bucket.physicsObject)
+        addPegsBlocksIntoGame(pegs: gameboard.pegs, blocks: gameboard.blocks)
         addPhysicsBoundary(boardSize: gameboard.boardSize)
 
         assert(checkRepresentation())
@@ -84,7 +88,12 @@ class GameEngine {
         let leftCheck = ball.position.x < 0
         let rightCheck = ball.position.x > gameboard.boardSize.width
 
-        return bottomCheck || topCheck || rightCheck || leftCheck
+        let bucketTopCheck = ball.position.y + (ball.diameter / 2) > bucket.position.y - (bucket.height / 2)
+        let bucketLeftCheck = ball.position.x > bucket.position.x - (bucket.width / 2)
+        let bucketRightCheck = ball.position.x < bucket.position.x + (bucket.width / 2)
+        let bucketCheck = bucketTopCheck && bucketLeftCheck && bucketRightCheck
+
+        return bottomCheck || topCheck || rightCheck || leftCheck || bucketCheck
     }
 
     var isGameOver: Bool {
@@ -122,10 +131,25 @@ class GameEngine {
         }
 
         physicsEngine.updatePhysicsObjects(timeDelta: timeDelta)
+        applyPowerUps()
         removePegsPremature()
         removeBallAndPegsIfExit()
 
         assert(checkRepresentation())
+    }
+
+    func applyPowerUps() {
+        guard ball != nil && !isGameOver && !isWin else {
+            return
+        }
+
+        for peg in pegs where !removedPegs.contains(peg) {
+            peg.powerup?.powerup(peg: peg, gameEngine: self)
+        }
+    }
+
+    func setIsSpooky() {
+        isSpooky = true
     }
 
     func reset() {
@@ -139,9 +163,11 @@ class GameEngine {
         ball = nil
         score = 0
         ballsRemaining = GameEngine.INITIAL_NUMBER_OF_BALLS
+        bucket = BucketGameObject(boardSize: gameboard.boardSize)
+        isSpooky = false
 
-        addPegsIntoGame(pegs: gameboard.pegs)
-        addBlocksIntoGame(blocks: gameboard.blocks)
+        physicsEngine.addPhysicsObject(physicsObject: bucket.physicsObject)
+        addPegsBlocksIntoGame(pegs: gameboard.pegs, blocks: gameboard.blocks)
         addPhysicsBoundary(boardSize: gameboard.boardSize)
 
         assert(checkRepresentation())
@@ -155,7 +181,7 @@ class GameEngine {
         assert(checkRepresentation())
     }
 
-    private func addPegsIntoGame(pegs: [Peg]) {
+    private func addPegsBlocksIntoGame(pegs: [Peg], blocks: [Block]) {
         for peg in pegs {
             pegsRemainingByType[peg.pegtype, default: 0] += 1
 
@@ -163,9 +189,7 @@ class GameEngine {
             self.pegs.append(pegGameObject)
             physicsEngine.addPhysicsObject(physicsObject: pegGameObject.physicsObject)
         }
-    }
 
-    private func addBlocksIntoGame(blocks: [Block]) {
         for block in blocks {
             let blockGameObject = BlockGameObject(block: block)
             self.blocks.append(blockGameObject)
@@ -188,7 +212,9 @@ class GameEngine {
 
     private func makeNewBall(point: CGPoint) -> BallGameObject {
         let initialPosition = CGPoint(x: gameboard.boardSize.width / 2, y: BallGameObject.DEFAULT_BALL_DIAMETER / 2)
-        let initialVelocity = calculateInitialVelocity(startPoint: initialPosition, endPoint: point)
+        let initialVector = CGVector(dx: point.x - initialPosition.x, dy: point.y - initialPosition.y)
+        let normalisedVelocity = Utils.normalize(initialVector)
+        let initialVelocity = Utils.scaleBy(normalisedVelocity, n: GameEngine.INIITAL_BALL_SPEED)
 
         let newBall = BallGameObject(initialPosition: initialPosition,
                                      initialForce: GameEngine.GRAVITY,
@@ -198,18 +224,25 @@ class GameEngine {
         return newBall
     }
 
-    private func calculateInitialVelocity(startPoint: CGPoint, endPoint: CGPoint) -> CGVector {
-        let displacementVector = CGVector(dx: endPoint.x - startPoint.x,
-                                          dy: endPoint.y - startPoint.y)
-        let displacementLength = sqrt(pow(displacementVector.dx, 2) + pow(displacementVector.dy, 2))
-        let scaleFactor = GameEngine.INIITAL_BALL_SPEED / displacementLength
-        let scaledVector = CGVector(dx: displacementVector.dx * scaleFactor, dy: displacementVector.dy * scaleFactor)
-
-        return scaledVector
-    }
-
     private func removeBallAndPegsIfExit() {
         guard let ball = self.ball, isBallOutOfBounds else {
+            return
+        }
+
+        if bucket.isBallEnter {
+            if !isSpooky {
+                ballsRemaining += 1
+            }
+            score += 500
+        }
+
+        if isSpooky {
+            let oldPosition = ball.position
+            let newPosition = CGPoint(x: oldPosition.x, y: BallGameObject.DEFAULT_BALL_DIAMETER / 2)
+            ball.physicsObject.setPosition(newPosition: newPosition)
+            ball.physicsObject.setVelocity(newVelocity: .zero)
+
+            self.isSpooky = false
             return
         }
 
@@ -234,7 +267,8 @@ class GameEngine {
         let pegPointMap: [PegType: Int] = [
             .NormalPeg: 10,
             .GoalPeg: 100,
-            .PowerUpPeg: 10,
+            .KaboomPeg: 50,
+            .SpookyPeg: 0,
             .HealthPeg: 30,
             .StubbornPeg: 20
         ]
@@ -277,26 +311,24 @@ class GameEngine {
     private func checkRepresentation() -> Bool {
         // totals pegs in game engine must equal pegs in gameboard
         guard gameboard.pegs.count == pegs.count else {
+            print("failed on peg count")
             return false
         }
 
         // number of removed pegs must be not more than number of pegs
         guard removedPegs.count <= pegs.count else {
+            print("failed removedpeg count more than peg count")
             return false
         }
 
-        // number of balls remaining must be at least 0 and not more than initial number of balls
-        guard ballsRemaining >= 0 && ballsRemaining <= GameEngine.INITIAL_NUMBER_OF_BALLS else {
+        // number of balls remaining must be at least 0
+        guard ballsRemaining >= 0 else {
+            print("lesser than 0 balls")
             return false
         }
 
         // if balls is not nil
         if let mainBall = ball {
-            // number of balls remaining must be less than initial number of balls
-            guard ballsRemaining < GameEngine.INITIAL_NUMBER_OF_BALLS else {
-                return false
-            }
-
             // ball game object must have a physics object in physics engine
             guard physicsEngine.physicsObjects.contains(where: { $0 === mainBall.physicsObject }) else {
                 return false
@@ -306,6 +338,7 @@ class GameEngine {
             guard mainBall.position.x >= 0,
                   mainBall.position.x <= gameboard.boardSize.width,
                   mainBall.position.y >= 0 else {
+                print("ball escape boundary")
                 return false
             }
         }

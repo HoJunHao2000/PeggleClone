@@ -48,13 +48,24 @@ private struct GameboardView: View {
     private var boardView: some View {
         let boardSize = viewModel.gameboard.boardSize
 
-        return Image("background")
-            .resizable()
-            .scaledToFill()
-            .clipped()
-            .edgesIgnoringSafeArea(.top)
-            .frame(width: boardSize.width, height: boardSize.height)
+        return ZStack {
+            Image("background")
+                .resizable()
+                .scaledToFill()
+                .clipped()
+                .edgesIgnoringSafeArea(.top)
+                .frame(width: boardSize.width, height: boardSize.height)
 
+            VStack {
+                Spacer()
+                Text("Restricted Bucket Area")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity, minHeight: 100)
+                    .background(Color.red.opacity(0.7))
+                    .clipShape(RoundedRectangle(cornerRadius: 0, style: .continuous))
+            }
+        }
     }
 
     private var pegsView: some View {
@@ -63,7 +74,8 @@ private struct GameboardView: View {
         let pegViewMap: [PegType: () -> AnyView] = [
             .NormalPeg: { AnyView(ImageView(imageName: "peg-blue")) },
             .GoalPeg: { AnyView(ImageView(imageName: "peg-orange")) },
-            .PowerUpPeg: { AnyView(ImageView(imageName: "peg-green")) },
+            .KaboomPeg: { AnyView(ImageView(imageName: "peg-green")) },
+            .SpookyPeg: { AnyView(ImageView(imageName: "peg-purple")) },
             .StubbornPeg: { AnyView(ImageView(imageName: "peg-grey")) },
             .HealthPeg: { AnyView(ImageView(imageName: "peg-yellow")) }
         ]
@@ -276,12 +288,13 @@ private struct ButtonsView: View {
         let pegMap: [PegType: String] = [
             .NormalPeg: "peg-blue",
             .GoalPeg: "peg-orange",
-            .PowerUpPeg: "peg-green",
+            .KaboomPeg: "peg-green",
+            .SpookyPeg: "peg-purple",
             .HealthPeg: "peg-yellow",
             .StubbornPeg: "peg-grey"
         ]
 
-        let pegTypes: [PegType] = [.NormalPeg, .GoalPeg, .PowerUpPeg, .HealthPeg, .StubbornPeg]
+        let pegTypes: [PegType] = [.NormalPeg, .GoalPeg, .KaboomPeg, .SpookyPeg, .HealthPeg, .StubbornPeg]
 
         let pegCountMap = viewModel.pegsCountByType
 

@@ -8,10 +8,12 @@ class IntersectorDelegate {
             return intersects(circle: circle, line: line)
         } else if let line = object1 as? LinePhysicsObject, let circle = object2 as? CirclePhysicsObject {
             return intersects(circle: circle, line: line)
-        } else if let circle = object1 as? CirclePhysicsObject, let block = object2 as? BlockPhysicsObject {
+        } else if let circle = object1 as? CirclePhysicsObject, let block = object2 as? RectPhysicsObject {
             return intersects(circle: circle, block: block)
-        } else if let block = object1 as? BlockPhysicsObject, let circle = object2 as? CirclePhysicsObject {
+        } else if let block = object1 as? RectPhysicsObject, let circle = object2 as? CirclePhysicsObject {
             return intersects(circle: circle, block: block)
+        } else if let rect = object1 as? RectPhysicsObject, let line = object2 as? LinePhysicsObject {
+            return intersects(rect: rect, line: line)
         } else {
             return false
         }
@@ -31,7 +33,7 @@ class IntersectorDelegate {
         return distance <= (circle.diameter / 2)
     }
 
-    private func intersects(circle: CirclePhysicsObject, block: BlockPhysicsObject) -> Bool {
+    private func intersects(circle: CirclePhysicsObject, block: RectPhysicsObject) -> Bool {
         let blockCorners = Utils.cornersOfRect(size: block.size,
                                                position: block.position,
                                                rotation: block.rotation)
@@ -68,5 +70,18 @@ class IntersectorDelegate {
         }
 
         return false
+    }
+
+    private func intersects(rect: RectPhysicsObject, line: LinePhysicsObject) -> Bool {
+        guard rect.isMoveable else {
+            return false
+        }
+
+        let corners = Utils.cornersOfRect(size: rect.size, position: rect.position, rotation: rect.rotation)
+
+        return Utils.doLinesIntersect(start1: corners[0],
+                                      end1: corners[1],
+                                      start2: line.startPoint,
+                                      end2: line.endPoint)
     }
 }

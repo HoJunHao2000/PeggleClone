@@ -28,6 +28,10 @@ class GameViewModel: ObservableObject {
         gameEngine.blocks
     }
 
+    var bucket: BucketGameObject {
+        gameEngine.bucket
+    }
+
     var pegs: [PegGameObject] {
         gameEngine.pegs
     }
@@ -92,6 +96,7 @@ class GameViewModel: ObservableObject {
         }
 
         self.cannonAngle = angleToRotate
+        objectWillChange.send()
     }
 
     private func createDisplayLink() {

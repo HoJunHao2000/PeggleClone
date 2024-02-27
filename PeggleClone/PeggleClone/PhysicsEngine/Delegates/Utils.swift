@@ -93,4 +93,28 @@ class Utils {
     static func distanceBetween(point1: CGPoint, point2: CGPoint) -> Double {
         sqrt(pow(point1.x - point2.x, 2) + pow(point1.y - point2.y, 2))
     }
+
+    static func doLinesIntersect(start1: CGPoint, end1: CGPoint, start2: CGPoint, end2: CGPoint) -> Bool {
+        let p0_x = start1.x
+        let p0_y = start1.y
+        let p1_x = end1.x
+        let p1_y = end1.y
+
+        let p2_x = start2.x
+        let p2_y = start2.y
+        let p3_x = end2.x
+        let p3_y = end2.y
+
+        let s1_x = p1_x - p0_x
+        let s1_y = p1_y - p0_y
+        let s2_x = p3_x - p2_x
+        let s2_y = p3_y - p2_y
+
+        let s =
+            (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y)
+        let t =
+            (s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y)
+
+        return s >= 0 && s <= 1 && t >= 0 && t <= 1
+    }
 }

@@ -10,13 +10,13 @@ import Foundation
 class BlockGameObject {
     private static let DEFAULT_BLOCK_ELASTICITY: Double = 0.95
 
-    private(set) var physicsObject: BlockPhysicsObject
+    private(set) var physicsObject: RectPhysicsObject
 
     init(block: Block) {
-        self.physicsObject = BlockPhysicsObject(position: block.position,
-                                                size: block.size,
-                                                rotation: block.rotation,
-                                                elasticity: BlockGameObject.DEFAULT_BLOCK_ELASTICITY)
+        self.physicsObject = RectPhysicsObject(position: block.position,
+                                               size: block.size,
+                                               elasticity: BlockGameObject.DEFAULT_BLOCK_ELASTICITY,
+                                               rotation: block.rotation)
     }
 
     var height: Double {

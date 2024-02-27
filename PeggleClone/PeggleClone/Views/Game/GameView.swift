@@ -53,6 +53,7 @@ private struct GameLevelView: View {
             cannonView
             pegsView
             blocksView
+            bucketView
             if let ball = gameViewModel.ball {
                 ballView(ball: ball)
             }
@@ -103,9 +104,12 @@ private struct GameLevelView: View {
             .GoalPeg: { width, position, isLit in AnyView(goalPegView(width: width,
                                                                       position: position,
                                                                       isLit: isLit)) },
-            .PowerUpPeg: { width, position, isLit in AnyView(powerUpPegView(width: width,
-                                                                            position: position,
-                                                                            isLit: isLit)) },
+            .KaboomPeg: { width, position, isLit in AnyView(kaboomPegView(width: width,
+                                                                          position: position,
+                                                                          isLit: isLit)) },
+            .SpookyPeg: { width, position, isLit in AnyView(spookyPegView(width: width,
+                                                                          position: position,
+                                                                          isLit: isLit)) },
             .StubbornPeg: { width, position, isLit in AnyView(stubbornPegView(width: width,
                                                                               position: position,
                                                                               isLit: isLit)) },
@@ -147,8 +151,12 @@ private struct GameLevelView: View {
         pegView(imageName: isLit ? "peg-orange-glow" : "peg-orange", width: width, position: position)
     }
 
-    private func powerUpPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
+    private func kaboomPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
         pegView(imageName: isLit ? "peg-green-glow" : "peg-green", width: width, position: position)
+    }
+
+    private func spookyPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
+        pegView(imageName: isLit ? "peg-purple-glow" : "peg-purple", width: width, position: position)
     }
 
     private func stubbornPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
@@ -169,6 +177,12 @@ private struct GameLevelView: View {
                 .rotationEffect(.degrees(block.rotation))
                 .position(block.position)
         }
+    }
+
+    private var bucketView: some View {
+        ImageView(imageName: "bucket")
+            .frame(width: gameViewModel.bucket.width, height: gameViewModel.bucket.height)
+            .position(gameViewModel.bucket.position)
     }
 }
 
@@ -211,12 +225,13 @@ private struct StatsView: View {
         let pegMap: [PegType: String] = [
             .NormalPeg: "peg-blue",
             .GoalPeg: "peg-orange",
-            .PowerUpPeg: "peg-green",
+            .KaboomPeg: "peg-green",
+            .SpookyPeg: "peg-purple",
             .HealthPeg: "peg-yellow",
             .StubbornPeg: "peg-grey"
         ]
 
-        let pegTypes: [PegType] = [.NormalPeg, .GoalPeg, .PowerUpPeg, .HealthPeg, .StubbornPeg]
+        let pegTypes: [PegType] = [.NormalPeg, .GoalPeg, .KaboomPeg, .SpookyPeg, .HealthPeg, .StubbornPeg]
 
         return HStack(spacing: 10) {
             ForEach(pegTypes, id: \.self) { pegType in
