@@ -8,7 +8,7 @@
 import Foundation
 
 class KaBoom: PowerUp {
-    private static let EXPLOSION_RADIUS = 100.0
+    static let EXPLOSION_RADIUS = 100.0
 
     func powerup(peg: PegGameObject, gameEngine: GameEngine) {
 

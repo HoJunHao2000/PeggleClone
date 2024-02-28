@@ -17,7 +17,7 @@ import Foundation
 
 class Peg {
     static let DEFAULT_PEG_DIAMETER: Double = 50
-    private static let DEFAULT_PEG_ANGLE: Double = 0
+    static let DEFAULT_PEG_ANGLE: Double = 0
 
     let id: UUID
     let pegtype: PegType

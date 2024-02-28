@@ -33,6 +33,7 @@
 		464B06AC2B89E09900DD1A95 /* LevelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */; };
 		464B06AE2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */; };
 		464B06B02B8AE59E00DD1A95 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AF2B8AE59E00DD1A95 /* Block.swift */; };
+		469C636E2B8F69EE005A3896 /* PreloaderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C636D2B8F69EE005A3896 /* PreloaderDelegate.swift */; };
 		46F4BAAC2B837A0C00890223 /* Gameboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAB2B837A0C00890223 /* Gameboard.swift */; };
 		46F4BAAE2B837A2700890223 /* Peg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAD2B837A2700890223 /* Peg.swift */; };
 		46F4BAB02B837A5500890223 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F4BAAF2B837A5500890223 /* CoreDataManager.swift */; };
@@ -89,6 +90,7 @@
 		464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectorView.swift; sourceTree = "<group>"; };
 		464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectorViewModel.swift; sourceTree = "<group>"; };
 		464B06AF2B8AE59E00DD1A95 /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
+		469C636D2B8F69EE005A3896 /* PreloaderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreloaderDelegate.swift; sourceTree = "<group>"; };
 		46F4BAAB2B837A0C00890223 /* Gameboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gameboard.swift; sourceTree = "<group>"; };
 		46F4BAAD2B837A2700890223 /* Peg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peg.swift; sourceTree = "<group>"; };
 		46F4BAAF2B837A5500890223 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 				46F4BAB32B837AB000890223 /* LevelDesignerViewModel.swift */,
 				4628453F2B883561003E40D8 /* GameboardCoreDataDelegate.swift */,
 				462845492B886DCF003E40D8 /* LevelDesignerValidatorDelegate.swift */,
+				469C636D2B8F69EE005A3896 /* PreloaderDelegate.swift */,
 			);
 			path = LevelDesigner;
 			sourceTree = "<group>";
@@ -476,6 +479,7 @@
 				462845562B88909F003E40D8 /* BallGameObject.swift in Sources */,
 				462845642B8891A3003E40D8 /* CollisionDelegate.swift in Sources */,
 				46F92F392B8C352400E81B79 /* RectPhysicsObject.swift in Sources */,
+				469C636E2B8F69EE005A3896 /* PreloaderDelegate.swift in Sources */,
 				464B06AE2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift in Sources */,
 				4628455F2B889150003E40D8 /* CirclePhysicsObject.swift in Sources */,
 				46F4BABB2B837B3100890223 /* LevelDesignerView.swift in Sources */,

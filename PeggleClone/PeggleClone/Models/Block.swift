@@ -10,7 +10,7 @@ import Foundation
 class Block {
     static let DEFAULT_BLOCK_WIDTH: Double = 50
     static let DEFAULT_BLOCK_HEIGHT: Double = 25
-    private static let DEFAULT_BLOCK_ANGLE: Double = 0
+    static let DEFAULT_BLOCK_ANGLE: Double = 0
 
     let id: UUID
     private(set) var position: CGPoint

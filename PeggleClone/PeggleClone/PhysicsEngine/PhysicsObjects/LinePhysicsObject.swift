@@ -8,7 +8,7 @@
 import Foundation
 
 class LinePhysicsObject: PhysicsObject {
-    private static let DEFAULT_LINE_ELASTICITY: Double = 0.95
+    static let DEFAULT_LINE_ELASTICITY: Double = 0.95
 
     let startPoint: CGPoint
     let endPoint: CGPoint

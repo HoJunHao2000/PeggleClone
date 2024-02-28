@@ -19,7 +19,7 @@ struct LevelDesignerActionButtonsView: View {
 
     var body: some View {
         HStack {
-            loadView
+            loadButtonView
 
             saveButtonView
 
@@ -31,7 +31,7 @@ struct LevelDesignerActionButtonsView: View {
         }
     }
 
-    private var loadView: some View {
+    private var loadButtonView: some View {
         Menu("LOAD") {
             Picker("Current Gameboard", selection: $selectedGameboard) {
                 Text("New Gameboard")
@@ -45,11 +45,24 @@ struct LevelDesignerActionButtonsView: View {
             }
             .onChange(of: selectedGameboard) {
                 if let id = selectedGameboard {
-                    viewModel.loadGameboard(id: id)
+                    viewModel.loadGameboard(id: id, preloadId: -1)
                 } else {
                     viewModel.newGameboard()
                 }
             }
+
+            Section {
+                Button("Preloaded 1") {
+                    viewModel.loadGameboard(id: UUID(), preloadId: 1)
+                }
+                Button("Preloaded 2") {
+                    viewModel.loadGameboard(id: UUID(), preloadId: 2)
+                }
+                Button("Preloaded 3") {
+                    viewModel.loadGameboard(id: UUID(), preloadId: 3)
+                }
+            }
+
         }
     }
 

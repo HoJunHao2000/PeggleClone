@@ -33,6 +33,7 @@ class LevelDesignerViewModel: ObservableObject {
 
     private let coreDataDelegate = GameboardCoreDataDelegate()
     private let validator = LevelDesignerValidatorDelegate()
+    private let preloader = PreloaderDelegate()
 
     init() {
         self.gameboard = Gameboard(id: UUID(), name: "", boardSize: .zero, pegs: [], blocks: [])
@@ -50,12 +51,20 @@ class LevelDesignerViewModel: ObservableObject {
 
     /// Loads a gameboard with the specified identifier.
     /// - Parameter id: The unique identifier of the gameboard to be loaded.
-    func loadGameboard(id: UUID) {
-        if let loadedGamboard = coreDataDelegate.getGameboard(id: id) {
-            self.gameboard = loadedGamboard
+    func loadGameboard(id: UUID, preloadId: Int) {
+        var loadedGameboard: Gameboard?
+
+        if preloadId != -1 {
+            loadedGameboard = preloader.load(id: preloadId, gameboard: gameboard)
+        } else {
+            loadedGameboard = coreDataDelegate.getGameboard(id: id)
+        }
+
+        if let loadedGameboard = loadedGameboard {
+            self.gameboard = loadedGameboard
             self.pegsCountByType = [:]
 
-            for peg in loadedGamboard.pegs {
+            for peg in loadedGameboard.pegs {
                 pegsCountByType[peg.pegtype, default: 0] += 1
             }
 

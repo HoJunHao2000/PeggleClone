@@ -8,9 +8,9 @@
 import Foundation
 
 class BucketGameObject {
-    private static let DEFAULT_BUCKET_ELASTICITY: Double = 0.95
-    private static let DEFAULT_BUCKET_HEIGHT: Double = 100
-    private static let DEFAULT_BUCKET_WIDTH: Double = 100
+    static let DEFAULT_BUCKET_ELASTICITY: Double = 0.95
+    static let DEFAULT_BUCKET_HEIGHT: Double = 100
+    static let DEFAULT_BUCKET_WIDTH: Double = 100
 
     private(set) var physicsObject: RectPhysicsObject
 

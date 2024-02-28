@@ -18,9 +18,9 @@ import Foundation
 
 class PegGameObject {
     static let MAX_HIT_COUNT: Int = 240
-    private static let DEFAULT_PEG_ELASTICITY: Double = 0.6
+    static let DEFAULT_PEG_ELASTICITY: Double = 0.6
 
-    private static let pegTypePowerUpMap: [PegType: PowerUp] = [
+    static let pegTypePowerUpMap: [PegType: PowerUp] = [
         .KaboomPeg: KaBoom(),
         .SpookyPeg: Spooky()
     ]

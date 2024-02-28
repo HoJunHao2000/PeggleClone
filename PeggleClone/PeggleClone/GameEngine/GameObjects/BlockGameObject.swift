@@ -8,7 +8,7 @@
 import Foundation
 
 class BlockGameObject {
-    private static let DEFAULT_BLOCK_ELASTICITY: Double = 0.95
+    static let DEFAULT_BLOCK_ELASTICITY: Double = 0.95
 
     private(set) var physicsObject: RectPhysicsObject
 

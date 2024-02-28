@@ -31,9 +31,9 @@
 import Foundation
 
 class GameEngine {
-    private static let INITIAL_NUMBER_OF_BALLS = 10
+    static let INITIAL_NUMBER_OF_BALLS = 10
     static let INIITAL_BALL_SPEED: Double = 1_200
-    private static let GRAVITY = CGVector(dx: 0.0, dy: 981)
+    static let GRAVITY = CGVector(dx: 0.0, dy: 981)
 
     let gameboard: Gameboard
 
@@ -173,14 +173,6 @@ class GameEngine {
         assert(checkRepresentation())
     }
 
-    private func resetHitCount() {
-        assert(checkRepresentation())
-
-        physicsEngine.resetAllHitCount()
-
-        assert(checkRepresentation())
-    }
-
     private func addPegsBlocksIntoGame(pegs: [Peg], blocks: [Block]) {
         for peg in pegs {
             pegsRemainingByType[peg.pegtype, default: 0] += 1
@@ -260,7 +252,7 @@ class GameEngine {
         }
 
         addAttemptScore()
-        resetHitCount()
+        physicsEngine.resetAllHitCount()
     }
 
     private func addAttemptScore() {
