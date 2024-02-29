@@ -55,7 +55,7 @@ class LevelDesignerViewModel: ObservableObject {
         var loadedGameboard: Gameboard?
 
         if preloadId != -1 {
-            loadedGameboard = preloader.load(id: preloadId, gameboard: gameboard)
+            loadedGameboard = preloader.load(id: preloadId, boardSize: gameboard.boardSize)
         } else {
             loadedGameboard = coreDataDelegate.getGameboard(id: id)
         }

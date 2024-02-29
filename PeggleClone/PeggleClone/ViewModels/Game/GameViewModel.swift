@@ -16,12 +16,32 @@ class GameViewModel: ObservableObject {
     private var displayLink: CADisplayLink?
     private var previousTime: TimeInterval
     private var lag: Double
+    private var preload: Int
+    private(set) var hasPreloaded: Bool
+
+    private let preloader = PreloaderDelegate()
 
     init(gameboard: Gameboard) {
         self.gameEngine = GameEngine(gameboard: gameboard)
         self.cannonAngle = 0.0
         self.previousTime = Date().timeIntervalSince1970
         self.lag = 0
+        self.hasPreloaded = true
+        self.preload = -1
+    }
+
+    init(preload: Int) {
+        let emptyGameboard = Gameboard(id: UUID(),
+                                       name: "",
+                                       boardSize: CGSize(width: CGFloat.infinity, height: CGFloat.infinity),
+                                       pegs: [],
+                                       blocks: [])
+        self.gameEngine = GameEngine(gameboard: emptyGameboard)
+        self.cannonAngle = 0.0
+        self.previousTime = Date().timeIntervalSince1970
+        self.lag = 0
+        self.hasPreloaded = false
+        self.preload = preload
     }
 
     var blocks: [BlockGameObject] {
@@ -53,15 +73,33 @@ class GameViewModel: ObservableObject {
     }
 
     var isGameOver: Bool {
-        gameEngine.isGameOver
+        guard hasPreloaded else {
+            return false
+        }
+        return gameEngine.isGameOver
     }
 
     var isWin: Bool {
-        gameEngine.isWin
+        guard hasPreloaded else {
+            return false
+        }
+        return gameEngine.isWin
     }
 
     var ballsRemaining: Int {
         gameEngine.ballsRemaining
+    }
+
+    func loadPreloadGameboard(boardSize: CGSize) {
+        if let preloadedGameboard = preloader.load(id: preload, boardSize: boardSize) {
+            print("loaded preloaded")
+            self.gameEngine = GameEngine(gameboard: preloadedGameboard)
+            self.cannonAngle = 0.0
+            self.previousTime = Date().timeIntervalSince1970
+            self.hasPreloaded = true
+
+            objectWillChange.send()
+        }
     }
 
     func end() {

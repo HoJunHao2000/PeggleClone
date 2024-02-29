@@ -8,9 +8,7 @@
 import Foundation
 
 class PreloaderDelegate {
-    func load(id: Int, gameboard: Gameboard) -> Gameboard? {
-        let boardSize = gameboard.boardSize
-
+    func load(id: Int, boardSize: CGSize) -> Gameboard? {
         let gameboardMap: [Int: (CGSize) -> Gameboard] = [
             1: { self.gameboardOne(boardSize: $0) },
             2: { self.gameboardTwo(boardSize: $0) },

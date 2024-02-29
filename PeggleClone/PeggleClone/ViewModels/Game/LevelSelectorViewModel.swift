@@ -13,6 +13,15 @@ class LevelSelectorViewModel: ObservableObject {
 
     var gameboards: [Gameboard] {
         let gameboardEntities = coreDataDelegate.getGameboards()
-        return gameboardEntities.map { gameboardTranslator.translateToModel(entity: $0) }
+        var gameboards: [Gameboard] = []
+        for i in 1..<4 {
+            let defaultGameboard = Gameboard(id: UUID(), name: "Preloaded \(i)", boardSize: .zero, pegs: [], blocks: [])
+            gameboards.append(defaultGameboard)
+        }
+        for i in 0..<gameboardEntities.count {
+            let gameboardModel = gameboardTranslator.translateToModel(entity: gameboardEntities[i])
+            gameboards.append(gameboardModel)
+        }
+        return gameboards
     }
 }

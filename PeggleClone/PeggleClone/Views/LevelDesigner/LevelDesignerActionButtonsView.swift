@@ -62,7 +62,6 @@ struct LevelDesignerActionButtonsView: View {
                     viewModel.loadGameboard(id: UUID(), preloadId: 3)
                 }
             }
-
         }
     }
 

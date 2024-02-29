@@ -14,6 +14,10 @@ struct GameView: View {
         self.gameViewModel = GameViewModel(gameboard: gameboard)
     }
 
+    init(preload: Int) {
+        self.gameViewModel = GameViewModel(preload: preload)
+    }
+
     var body: some View {
         VStack {
             GameLevelView(gameViewModel: gameViewModel)
@@ -48,40 +52,45 @@ private struct GameLevelView: View {
     @ObservedObject var gameViewModel: GameViewModel
 
     var body: some View {
-        ZStack {
-            boardView
-            cannonView
-            pegsView
-            blocksView
-            bucketView
-            if let ball = gameViewModel.ball {
-                ballView(ball: ball)
+        GeometryReader { geometry in
+            ZStack {
+                boardView(boardSize: geometry.size)
+                cannonView
+                pegsView
+                blocksView
+                bucketView
+                if let ball = gameViewModel.ball {
+                    ballView(ball: ball)
+                }
             }
-        }
-        .gesture(
-            DragGesture()
-                .onChanged { gesture in
-                    gameViewModel.adjustCannonAngle(point: gesture.location)
+            .onAppear {
+                if !gameViewModel.hasPreloaded {
+                    gameViewModel.loadPreloadGameboard(boardSize: geometry.size)
                 }
-                .onEnded { gesture in
-                    gameViewModel.shoot(at: gesture.location)
-                }
-        )
-        .onTapGesture { gestureLocation in
-            gameViewModel.adjustCannonAngle(point: gestureLocation)
-            gameViewModel.shoot(at: gestureLocation)
+            }
+            .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        gameViewModel.adjustCannonAngle(point: gesture.location)
+                    }
+                    .onEnded { gesture in
+                        gameViewModel.shoot(at: gesture.location)
+                    }
+            )
+            .onTapGesture { gestureLocation in
+                gameViewModel.adjustCannonAngle(point: gestureLocation)
+                gameViewModel.shoot(at: gestureLocation)
+            }
         }
     }
 
-    private var boardView: some View {
-        let boardSize = gameViewModel.boardSize
-
-        return Image("background")
-                .resizable()
-                .scaledToFill()
-                .clipped()
-                .edgesIgnoringSafeArea(.all)
-                .frame(width: boardSize.width, height: boardSize.height)
+    private func boardView(boardSize: CGSize) -> some View {
+        Image("background")
+            .resizable()
+            .scaledToFill()
+            .clipped()
+            .edgesIgnoringSafeArea(.all)
+            .frame(width: boardSize.width, height: boardSize.height)
     }
 
     private var cannonView: some View {
@@ -194,7 +203,6 @@ private struct StatsView: View {
     var body: some View {
         VStack {
             topRowStatisticsView
-            Spacer()
             scoreView
         }
 
@@ -260,7 +268,7 @@ private struct StatsView: View {
         .padding(10)
         .background(.black.opacity(0.5))
         .cornerRadius(10)
-        .padding(10)
+        .padding(30)
     }
 }
 

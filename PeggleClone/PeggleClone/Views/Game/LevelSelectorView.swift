@@ -23,7 +23,7 @@ struct LevelSelectorView: View {
         }
         .onAppear {
             gameboards = viewModel.gameboards
-            isGameView = Array(repeating: false, count: gameboards.count)
+            isGameView = Array(repeating: false, count: gameboards.count + 3)
         }
     }
 
@@ -69,7 +69,11 @@ struct LevelSelectorView: View {
                 .cornerRadius(20)
         }
         .fullScreenCover(isPresented: $isGameView[index]) {
-            GameView(gameboard: gameboard)
+            if index < 3 {
+                GameView(preload: index + 1)
+            } else {
+                GameView(gameboard: gameboard)
+            }
         }
 
     }
