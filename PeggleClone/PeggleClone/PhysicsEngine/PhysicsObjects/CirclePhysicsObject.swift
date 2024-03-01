@@ -10,6 +10,9 @@ import Foundation
 class CirclePhysicsObject: PhysicsObject {
     let diameter: Double
 
+    let intersector = IntersectorDelegate()
+    let collisionHandler = CollisionDelegate()
+
     init(position: CGPoint,
          velocity: CGVector,
          force: CGVector,
@@ -24,5 +27,37 @@ class CirclePhysicsObject: PhysicsObject {
                    isMoveable: isMoveable,
                    elasticity: elasticity,
                    mass: mass)
+    }
+
+    override func intersects(_ physicsObject: PhysicsObject) -> Bool {
+        physicsObject.intersectsWithCircle(self)
+    }
+
+    override func intersectsWithCircle(_ circle: CirclePhysicsObject) -> Bool {
+        intersector.intersects(circle1: self, circle2: circle)
+    }
+
+    override func intersectsWithLine(_ line: LinePhysicsObject) -> Bool {
+        intersector.intersects(circle: self, line: line)
+    }
+
+    override func intersectsWithRectangle(_ rect: RectPhysicsObject) -> Bool {
+        intersector.intersects(circle: self, rect: rect)
+    }
+
+    override func collides(_ physicsObject: PhysicsObject) {
+        physicsObject.collidesWithCircle(self)
+    }
+
+    override func collidesWithCircle(_ circle: CirclePhysicsObject) {
+        collisionHandler.handleCircleCircleCollision(circle1: self, circle2: circle)
+    }
+
+    override func collidesWithLine(_ line: LinePhysicsObject) {
+        collisionHandler.handleCircleLineCollision(circle: self, line: line)
+    }
+
+    override func collidesWithRectangle(_ rect: RectPhysicsObject) {
+        collisionHandler.handleCircleRectCollision(circle: self, rect: rect)
     }
 }

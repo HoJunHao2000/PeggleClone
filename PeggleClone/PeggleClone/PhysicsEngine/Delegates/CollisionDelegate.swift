@@ -8,25 +8,7 @@
 import Foundation
 
 class CollisionDelegate {
-    func handleCollision(object1: PhysicsObject, object2: PhysicsObject) {
-        if let circleObj1 = object1 as? CirclePhysicsObject, let circleObj2 = object2 as? CirclePhysicsObject {
-            handleCircleCircleCollision(circle1: circleObj1, circle2: circleObj2)
-        } else if let circle = object1 as? CirclePhysicsObject, let line = object2 as? LinePhysicsObject {
-            handleCircleLineCollision(circle: circle, line: line)
-        } else if let line = object1 as? LinePhysicsObject, let circle = object2 as? CirclePhysicsObject {
-            handleCircleLineCollision(circle: circle, line: line)
-        } else if let circle = object1 as? CirclePhysicsObject, let rect = object2 as? RectPhysicsObject {
-            handleCircleRectCollision(circle: circle, rect: rect)
-        } else if let rect = object1 as? RectPhysicsObject, let circle = object2 as? CirclePhysicsObject {
-            handleCircleRectCollision(circle: circle, rect: rect)
-        } else if let rect = object1 as? RectPhysicsObject, let line = object2 as? LinePhysicsObject {
-            handleRectLineCollision(rect: rect, line: line)
-        } else {
-            return
-        }
-    }
-
-    private func handleCircleLineCollision(circle: CirclePhysicsObject, line: LinePhysicsObject) {
+    func handleCircleLineCollision(circle: CirclePhysicsObject, line: LinePhysicsObject) {
         guard circle.isMoveable else {
             return
         }
@@ -49,7 +31,7 @@ class CollisionDelegate {
         circle.setPosition(newPosition: newPosition)
     }
 
-    private func handleCircleCircleCollision(circle1: CirclePhysicsObject, circle2: CirclePhysicsObject) {
+    func handleCircleCircleCollision(circle1: CirclePhysicsObject, circle2: CirclePhysicsObject) {
         let normal = Utils.vectorBetweenTwoPoints(circle2.position, circle1.position)
         let normalizedNormal = Utils.normalize(normal)
 
@@ -105,7 +87,7 @@ class CollisionDelegate {
         }
     }
 
-    private func handleCircleRectCollision(circle: CirclePhysicsObject, rect: RectPhysicsObject) {
+    func handleCircleRectCollision(circle: CirclePhysicsObject, rect: RectPhysicsObject) {
         guard circle.isMoveable else {
             return
         }
@@ -156,7 +138,7 @@ class CollisionDelegate {
         circle.setPosition(newPosition: newPosition)
     }
 
-    private func handleRectLineCollision(rect: RectPhysicsObject, line: LinePhysicsObject) {
+    func handleRectLineCollision(rect: RectPhysicsObject, line: LinePhysicsObject) {
         // Reverse velocity
         let oldVelocity = rect.velocity
         rect.setVelocity(newVelocity: CGVector(dx: -oldVelocity.dx, dy: oldVelocity.dy))

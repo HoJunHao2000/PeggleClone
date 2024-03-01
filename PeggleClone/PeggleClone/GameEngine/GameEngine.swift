@@ -275,7 +275,9 @@ class GameEngine {
                         : 1
 
         for (pegType, count) in pegHitsCount {
-            score += pegPointMap[pegType] ?? 1 * count * multiplier
+            if let points = pegPointMap[pegType] {
+                score += points * count * multiplier
+            }
         }
 
         pegHitsCount = [:]

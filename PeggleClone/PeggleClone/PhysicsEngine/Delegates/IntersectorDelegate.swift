@@ -1,31 +1,13 @@
 import Foundation
 
 class IntersectorDelegate {
-    func intersects<T: PhysicsObject, U: PhysicsObject>(object1: T, object2: U) -> Bool {
-        if let circle1 = object1 as? CirclePhysicsObject, let circle2 = object2 as? CirclePhysicsObject {
-            return intersects(circle1: circle1, circle2: circle2)
-        } else if let circle = object1 as? CirclePhysicsObject, let line = object2 as? LinePhysicsObject {
-            return intersects(circle: circle, line: line)
-        } else if let line = object1 as? LinePhysicsObject, let circle = object2 as? CirclePhysicsObject {
-            return intersects(circle: circle, line: line)
-        } else if let circle = object1 as? CirclePhysicsObject, let block = object2 as? RectPhysicsObject {
-            return intersects(circle: circle, block: block)
-        } else if let block = object1 as? RectPhysicsObject, let circle = object2 as? CirclePhysicsObject {
-            return intersects(circle: circle, block: block)
-        } else if let rect = object1 as? RectPhysicsObject, let line = object2 as? LinePhysicsObject {
-            return intersects(rect: rect, line: line)
-        } else {
-            return false
-        }
-    }
-
-    private func intersects(circle1: CirclePhysicsObject, circle2: CirclePhysicsObject) -> Bool {
+    func intersects(circle1: CirclePhysicsObject, circle2: CirclePhysicsObject) -> Bool {
         let radiusSum = (circle1.diameter / 2) + (circle2.diameter / 2)
         let distance = Utils.distanceBetween(point1: circle1.position, point2: circle2.position)
         return distance <= radiusSum
     }
 
-    private func intersects(circle: CirclePhysicsObject, line: LinePhysicsObject) -> Bool {
+    func intersects(circle: CirclePhysicsObject, line: LinePhysicsObject) -> Bool {
         let closestPoint = Utils.closestPointOnLine(to: circle.position,
                                                     lineStart: line.startPoint,
                                                     lineEnd: line.endPoint)
@@ -33,11 +15,11 @@ class IntersectorDelegate {
         return distance <= (circle.diameter / 2)
     }
 
-    private func intersects(circle: CirclePhysicsObject, block: RectPhysicsObject) -> Bool {
-        let blockCorners = Utils.cornersOfRect(size: block.size,
-                                               position: block.position,
-                                               rotation: block.rotation)
-        let blockArea = block.size.height * block.size.width
+    func intersects(circle: CirclePhysicsObject, rect: RectPhysicsObject) -> Bool {
+        let blockCorners = Utils.cornersOfRect(size: rect.size,
+                                               position: rect.position,
+                                               rotation: rect.rotation)
+        let blockArea = rect.size.height * rect.size.width
         let circlePosition = circle.position
         let circleRadius = circle.diameter / 2
 
@@ -72,7 +54,7 @@ class IntersectorDelegate {
         return false
     }
 
-    private func intersects(rect: RectPhysicsObject, line: LinePhysicsObject) -> Bool {
+    func intersects(rect: RectPhysicsObject, line: LinePhysicsObject) -> Bool {
         guard rect.isMoveable else {
             return false
         }

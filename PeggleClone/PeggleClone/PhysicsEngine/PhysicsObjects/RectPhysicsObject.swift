@@ -11,6 +11,9 @@ class RectPhysicsObject: PhysicsObject {
     let size: CGSize
     let rotation: Double
 
+    let intersector = IntersectorDelegate()
+    let collisionHandler = CollisionDelegate()
+
     init(position: CGPoint,
          size: CGSize,
          elasticity: Double,
@@ -24,5 +27,29 @@ class RectPhysicsObject: PhysicsObject {
                    force: CGVector(dx: 0, dy: 0),
                    isMoveable: isMoveable,
                    elasticity: elasticity)
+    }
+
+    override func intersects(_ physicsObject: PhysicsObject) -> Bool {
+        physicsObject.intersectsWithRectangle(self)
+    }
+
+    override func intersectsWithCircle(_ circle: CirclePhysicsObject) -> Bool {
+        intersector.intersects(circle: circle, rect: self)
+    }
+
+    override func intersectsWithLine(_ line: LinePhysicsObject) -> Bool {
+        intersector.intersects(rect: self, line: line)
+    }
+
+    override func collides(_ physicsObject: PhysicsObject) {
+        physicsObject.collidesWithRectangle(self)
+    }
+
+    override func collidesWithCircle(_ circle: CirclePhysicsObject) {
+        collisionHandler.handleCircleRectCollision(circle: circle, rect: self)
+    }
+
+    override func collidesWithLine(_ line: LinePhysicsObject) {
+        collisionHandler.handleRectLineCollision(rect: self, line: line)
     }
 }

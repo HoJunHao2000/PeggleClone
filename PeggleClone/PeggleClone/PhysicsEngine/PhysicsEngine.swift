@@ -16,9 +16,6 @@ import Foundation
 class PhysicsEngine {
     private(set) var physicsObjects: [PhysicsObject] = []
 
-    private let collisionHandler = CollisionDelegate()
-    private let intersector = IntersectorDelegate()
-
     func addPhysicsObject(physicsObject: PhysicsObject) {
         guard !Set(physicsObjects).contains(physicsObject) else {
             return
@@ -40,17 +37,15 @@ class PhysicsEngine {
         resolveAllCollisions()
     }
 
-    func resolveAllCollisions() {
+    private func resolveAllCollisions() {
         for i in 0..<physicsObjects.count {
             for j in (i + 1)..<physicsObjects.count {
                 let physicsObjectOne = physicsObjects[i]
                 let physicsObjectTwo = physicsObjects[j]
 
-                guard intersector.intersects(object1: physicsObjectOne, object2: physicsObjectTwo) else {
-                    return
+                if physicsObjectOne.intersects(physicsObjectTwo) {
+                    physicsObjectOne.collides(physicsObjectTwo)
                 }
-
-                collisionHandler.handleCollision(object1: physicsObjectOne, object2: physicsObjectTwo)
             }
         }
     }

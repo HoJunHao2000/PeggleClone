@@ -97,6 +97,30 @@ class PhysicsObject {
         position.y += deltaY
     }
 
+    func intersects(_ physicsObject: PhysicsObject) -> Bool {
+        false
+    }
+
+    func intersectsWithLine(_ line: LinePhysicsObject) -> Bool {
+        false
+    }
+
+    func intersectsWithRectangle(_ rect: RectPhysicsObject) -> Bool {
+        false
+    }
+
+    func intersectsWithCircle(_ circle: CirclePhysicsObject) -> Bool {
+        false
+    }
+
+    func collides(_ physicsObject: PhysicsObject) {}
+
+    func collidesWithLine(_ line: LinePhysicsObject) {}
+
+    func collidesWithRectangle(_ rect: RectPhysicsObject) {}
+
+    func collidesWithCircle(_ circle: CirclePhysicsObject) {}
+
     private func checkRepresentation() -> Bool {
         // no negative hit count
         guard hitCount >= 0 else {
