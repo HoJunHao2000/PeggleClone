@@ -10,6 +10,7 @@ import QuartzCore
 
 class GameViewModel: ObservableObject {
     private static let SECONDS_ELAPSED_PER_FRAME: Double = 1 / 120
+    private static let GAME_DURATION: Double = 10
 
     private(set) var gameEngine: GameEngine
     private(set) var cannonAngle: Double
@@ -18,6 +19,8 @@ class GameViewModel: ObservableObject {
     private var lag: Double
     private var preload: Int
     private(set) var hasPreloaded: Bool
+    private var timer: Timer?
+    private(set) var remainingTime: TimeInterval = GAME_DURATION
 
     private let preloader = PreloaderDelegate()
 
@@ -77,7 +80,7 @@ class GameViewModel: ObservableObject {
             return false
         }
 
-        return gameEngine.isGameOver
+        return gameEngine.isGameOver || remainingTime <= 0
     }
 
     var isWin: Bool {
@@ -85,7 +88,7 @@ class GameViewModel: ObservableObject {
             return false
         }
 
-        return gameEngine.isWin
+        return gameEngine.isWin && remainingTime > 0
     }
 
     var ballsRemaining: Int {
@@ -112,6 +115,7 @@ class GameViewModel: ObservableObject {
     }
 
     func end() {
+        stopTimer()
         displayLink?.invalidate()
         displayLink = nil
     }
@@ -121,6 +125,7 @@ class GameViewModel: ObservableObject {
             return
         }
 
+        startTimer()
         gameEngine.launchBall(point: at)
         createDisplayLink()
     }
@@ -138,6 +143,22 @@ class GameViewModel: ObservableObject {
 
         self.cannonAngle = angleToRotate
         objectWillChange.send()
+    }
+
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: GameViewModel.SECONDS_ELAPSED_PER_FRAME,
+                                     repeats: true) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
+            remainingTime -= GameViewModel.SECONDS_ELAPSED_PER_FRAME
+        }
+    }
+
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 
     private func createDisplayLink() {

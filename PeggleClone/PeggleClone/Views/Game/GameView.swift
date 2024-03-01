@@ -274,6 +274,8 @@ private struct StatsView: View {
         HStack {
             Text("Score: \(gameViewModel.score)")
             Spacer()
+            Text("Time Left: \(Int(gameViewModel.remainingTime))")
+            Spacer()
             Text("Attempts left: \(gameViewModel.ballsRemaining)")
         }
         .foregroundColor(.white)
