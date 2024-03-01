@@ -162,6 +162,34 @@ class Gameboard {
 
     private func checkRepresentation() -> Bool {
         // Check if all pegs are within the board
+        guard checkRepresentationPegsOnBoard() else {
+            return false
+        }
+
+        // Check if there is any overlap between pegs
+        guard checkRepresentationOverlapBetweenPegs() else {
+            return false
+        }
+
+        // Check if blocks are within the board
+        guard checkRepresentationPegsOnBoard() else {
+            return false
+        }
+
+        // Check if any overlap between blocks
+        guard checkRepresentationOverlapBetweenBlocks() else {
+            return false
+        }
+
+        // Check if overlap between blocks and pegs
+        guard checkRepresentationPegBlockOverlap() else {
+            return false
+        }
+
+        return true
+    }
+
+    private func checkRepresentationPegsOnBoard() -> Bool {
         for peg in pegs {
             let x1 = peg.position.x - (peg.diameter / 2.0)
             let x2 = peg.position.x + (peg.diameter / 2.0)
@@ -173,7 +201,10 @@ class Gameboard {
             }
         }
 
-        // Check if there is any overlap between pegs
+        return true
+    }
+
+    private func checkRepresentationOverlapBetweenPegs() -> Bool {
         for (index, peg) in pegs.enumerated() {
             let isOverlap = pegs.enumerated().contains { otherIndex, otherPeg in
                 if index == otherIndex {
@@ -190,11 +221,86 @@ class Gameboard {
             }
         }
 
-        // Check if blocks are within the board
+        return true
+    }
 
-        // Check if any overlap between blocks
+    private func checkRepresentationBlocksOnBoard() -> Bool {
+        for block in blocks {
+            let corners = Utils.cornersOfRect(size: block.size,
+                                              position: block.position,
+                                              rotation: block.rotation)
+            for corner in corners where corner.x <= 0
+            || corner.x >= boardSize.width
+            || corner.y <= 0
+            || corner.y >= boardSize.height {
+                return false
+            }
+        }
 
-        // Check if overlap between blocks and pegs
+        return true
+    }
+
+    private func checkRepresentationOverlapBetweenBlocks() -> Bool {
+        for (index, block) in blocks.enumerated() {
+            let corners1 = Utils.cornersOfRect(size: block.size,
+                                               position: block.position,
+                                               rotation: block.rotation)
+            let isOverlap = blocks.enumerated().contains { otherIndex, otherBlock in
+                if index == otherIndex {
+                    return false
+                }
+                let corners2 = Utils.cornersOfRect(size: otherBlock.size,
+                                                   position: otherBlock.position,
+                                                   rotation: otherBlock.rotation)
+
+                return Utils.checkPolygonOverlap(corners1: corners1, corners2: corners2)
+            }
+
+            if isOverlap {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    private func checkRepresentationPegBlockOverlap() -> Bool {
+        for peg in pegs {
+            for block in blocks {
+                let blockCorners = Utils.cornersOfRect(size: block.size,
+                                                       position: block.position,
+                                                       rotation: block.rotation)
+                let pegPosition = peg.position
+                let pegRadius = peg.diameter / 2
+
+                let corner1 = blockCorners[0]
+                let corner2 = blockCorners[1]
+                let corner3 = blockCorners[2]
+                let corner4 = blockCorners[3]
+
+                let triangle1 = Utils.areaOfTriangle(p1: corner1, p2: pegPosition, p3: corner4)
+                let triangle2 = Utils.areaOfTriangle(p1: corner4, p2: pegPosition, p3: corner3)
+                let triangle3 = Utils.areaOfTriangle(p1: corner3, p2: pegPosition, p3: corner2)
+                let triangle4 = Utils.areaOfTriangle(p1: corner1, p2: pegPosition, p3: corner2)
+
+                if triangle1 + triangle2 + triangle3 + triangle4 <= block.height * block.width {
+                    return false
+                }
+
+                // Check if any of rectangle edges intersect the circle
+                for i in 0..<4 {
+                    let j = (i + 1) % 4
+                    let closestPoint = Utils.closestPointOnLine(to: pegPosition,
+                                                                lineStart: blockCorners[i],
+                                                                lineEnd: blockCorners[j])
+                    let distance = Utils.distanceBetween(point1: closestPoint, point2: pegPosition)
+
+                    if distance <= pegRadius {
+                        return false
+                    }
+                }
+            }
+        }
 
         return true
     }

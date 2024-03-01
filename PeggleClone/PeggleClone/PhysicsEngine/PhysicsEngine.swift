@@ -23,6 +23,7 @@ class PhysicsEngine {
         guard !Set(physicsObjects).contains(physicsObject) else {
             return
         }
+
         physicsObjects.append(physicsObject)
     }
 
@@ -30,14 +31,11 @@ class PhysicsEngine {
         physicsObjects.removeAll(where: { $0 === physicsObject })
     }
 
-    func resetAllHitCount() {
-        physicsObjects.forEach { $0.resetHitCount() }
-    }
-
     func updatePhysicsObjects(timeDelta: TimeInterval) {
         guard timeDelta > 0 else {
             return
         }
+
         physicsObjects.forEach({ $0.update(timeDelta: timeDelta) })
         resolveAllCollisions()
     }
@@ -48,16 +46,13 @@ class PhysicsEngine {
                 let physicsObjectOne = physicsObjects[i]
                 let physicsObjectTwo = physicsObjects[j]
 
-                handleCollisionBetween(objectA: physicsObjectOne, objectB: physicsObjectTwo)
+                guard intersector.intersects(object1: physicsObjectOne, object2: physicsObjectTwo) else {
+                    return
+                }
+
+                collisionHandler.handleCollision(object1: physicsObjectOne, object2: physicsObjectTwo)
             }
         }
-    }
-
-    private func handleCollisionBetween(objectA: PhysicsObject, objectB: PhysicsObject) {
-        guard intersector.intersects(object1: objectA, object2: objectB) else {
-            return
-        }
-        collisionHandler.handleCollision(object1: objectA, object2: objectB)
     }
 
     private func checkRepresentation() -> Bool {

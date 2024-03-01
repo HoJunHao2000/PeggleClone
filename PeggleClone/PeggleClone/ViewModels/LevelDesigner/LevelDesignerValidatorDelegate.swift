@@ -142,41 +142,7 @@ class LevelDesignerValidatorDelegate {
                                            position: block2.position,
                                            rotation: block2.rotation)
 
-        let polygons = [corners1, corners2]
-        var minA, maxA, projected, minB, maxB: Double
-
-        for i in 0..<polygons.count {
-            let polygon = polygons[i]
-
-            for i1 in 0..<polygon.count {
-                let i2 = (i1 + 1) % polygon.count
-                let p1 = polygon[i1]
-                let p2 = polygon[i2]
-
-                let normal = (x: p2.y - p1.y, y: p1.x - p2.x)
-
-                minA = .greatestFiniteMagnitude
-                maxA = -.greatestFiniteMagnitude
-                for j in 0..<corners1.count {
-                    projected = normal.x * corners1[j].x + normal.y * corners1[j].y
-                    minA = min(minA, projected)
-                    maxA = max(maxA, projected)
-                }
-
-                minB = .greatestFiniteMagnitude
-                maxB = -.greatestFiniteMagnitude
-                for j in 0..<corners2.count {
-                    projected = normal.x * corners2[j].x + normal.y * corners2[j].y
-                    minB = min(minB, projected)
-                    maxB = max(maxB, projected)
-                }
-
-                if maxA < minB || maxB < minA {
-                    return false
-                }
-            }
-        }
-        return true
+        return Utils.checkPolygonOverlap(corners1: corners1, corners2: corners2)
     }
 
     private func arePegBlockOverlapping(peg: Peg, block: Block) -> Bool {

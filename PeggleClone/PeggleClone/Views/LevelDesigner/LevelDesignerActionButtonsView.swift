@@ -20,13 +20,9 @@ struct LevelDesignerActionButtonsView: View {
     var body: some View {
         HStack {
             loadButtonView
-
             saveButtonView
-
             deleteButtonView
-
             resetButtonView
-
             startButtonView
         }
     }
@@ -52,28 +48,24 @@ struct LevelDesignerActionButtonsView: View {
             }
 
             Section {
-                Button("Preloaded 1") {
-                    viewModel.loadGameboard(id: UUID(), preloadId: 1)
-                }
-                Button("Preloaded 2") {
-                    viewModel.loadGameboard(id: UUID(), preloadId: 2)
-                }
-                Button("Preloaded 3") {
-                    viewModel.loadGameboard(id: UUID(), preloadId: 3)
+                ForEach(1...3, id: \.self) { index in
+                    Button("Preloaded \(index)") {
+                        viewModel.loadGameboard(id: UUID(), preloadId: index)
+                    }
                 }
             }
         }
     }
 
     private var saveButtonView: some View {
-        ButtonView(title: "SAVE", tapAction: {
+        Button("SAVE") {
             if viewModel.hasMinOneGoalPeg {
                 text = viewModel.gameboard.name
                 isSavePresented.toggle()
             } else {
                 showGoalPegAlert = true
             }
-        })
+        }
         .alert("SAVE", isPresented: $isSavePresented) {
             TextField("Name of level", text: $text)
             Button("OK", action: {
@@ -92,46 +84,35 @@ struct LevelDesignerActionButtonsView: View {
     }
 
     private var deleteButtonView: some View {
-        ButtonView(title: "DELETE", tapAction: {
+        Button("DELETE") {
             viewModel.deleteGameboard()
             selectedGameboard = nil
-        })
+        }
     }
 
     private var resetButtonView: some View {
-        ButtonView(title: "RESET", tapAction: {
+        Button("RESET") {
             viewModel.reset()
-        })
+        }
     }
 
     private var startButtonView: some View {
-        ButtonView(title: "START", tapAction: {
+        Button("START") {
             if viewModel.hasMinOneGoalPeg {
                 isGameView = true
             } else {
                 showGoalPegAlert = true
             }
-        })
+        }
         .fullScreenCover(isPresented: $isGameView) {
             GameView(gameboard: viewModel.gameboard)
         }
         .alert(isPresented: $showGoalPegAlert) {
-            Alert(title: Text("Error"),
-                  message: Text("At least one goal peg is required."),
-                  dismissButton: .default(Text("OK")))
-        }
-    }
-}
-
-private struct ButtonView: View {
-    let title: String
-    var tapAction: () -> Void
-
-    var body: some View {
-        Button(action: {
-            tapAction()
-        }) {
-            Text(title).foregroundColor(.blue)
+            Alert(
+                title: Text("Error"),
+                message: Text("At least one goal peg is required."),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 }

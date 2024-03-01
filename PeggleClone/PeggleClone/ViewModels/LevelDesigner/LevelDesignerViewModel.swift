@@ -74,7 +74,7 @@ class LevelDesignerViewModel: ObservableObject {
 
     /// Creates a new empty gameboard.
     func newGameboard() {
-        let oldBoardSize = self.gameboard.boardSize
+        let oldBoardSize = gameboard.boardSize
         self.gameboard = Gameboard(id: UUID(), name: "", boardSize: oldBoardSize, pegs: [], blocks: [])
         self.pegsCountByType = [:]
         objectWillChange.send()
@@ -83,16 +83,15 @@ class LevelDesignerViewModel: ObservableObject {
     /// Saves the current gameboard to Core Data.
     /// - Parameter name: The name to be associated with the gameboard.
     func saveGameboard(name: String) {
-        self.gameboard.setName(newName: name)
+        gameboard.setName(newName: name)
         coreDataDelegate.saveGameboard(gameboard: gameboard)
         objectWillChange.send()
     }
 
     /// Deletes the currently loaded gameboard.
     func deleteGameboard() {
-        coreDataDelegate.deleteGameboard(id: self.gameboard.id)
+        coreDataDelegate.deleteGameboard(id: gameboard.id)
         newGameboard()
-        objectWillChange.send()
     }
 
     func setBoardSize(newSize: CGSize) {
@@ -100,7 +99,7 @@ class LevelDesignerViewModel: ObservableObject {
             return
         }
 
-        self.gameboard.setBoardSize(newSize: newSize)
+        gameboard.setBoardSize(newSize: newSize)
         objectWillChange.send()
     }
 
@@ -127,7 +126,6 @@ class LevelDesignerViewModel: ObservableObject {
 
         gameboard.addPeg(peg: newPeg)
         pegsCountByType[newPeg.pegtype, default: 0] += 1
-
         objectWillChange.send()
     }
 
@@ -143,39 +141,25 @@ class LevelDesignerViewModel: ObservableObject {
         }
 
         gameboard.addBlock(block: newBlock)
-
         objectWillChange.send()
     }
 
     func deletePeg(peg: Peg) {
         if peg == selectedPeg {
-            selectedPeg = nil
-            selectedBlock = nil
-            diameter = nil
-            rotation = nil
-            height = nil
-            width = nil
+            resetSelection()
         }
 
         self.gameboard.deletePeg(peg: peg)
-
         pegsCountByType[peg.pegtype, default: 0] -= 1
-
         objectWillChange.send()
     }
 
     func deleteBlock(block: Block) {
         if block == selectedBlock {
-            selectedPeg = nil
-            selectedBlock = nil
-            diameter = nil
-            rotation = nil
-            height = nil
-            width = nil
+            resetSelection()
         }
 
         self.gameboard.deleteBlock(block: block)
-
         objectWillChange.send()
     }
 
@@ -198,7 +182,7 @@ class LevelDesignerViewModel: ObservableObject {
     }
 
     func setSelectedPeg(peg: Peg?) {
-        self.selectedBlock = nil
+        resetSelection()
         self.selectedPeg = peg
         self.diameter = peg?.diameter
         self.rotation = peg?.rotation
@@ -206,7 +190,7 @@ class LevelDesignerViewModel: ObservableObject {
     }
 
     func setSelectedBlock(block: Block?) {
-        self.selectedPeg = nil
+        resetSelection()
         self.selectedBlock = block
         self.height = Double(block?.height ?? 50)
         self.width = Double(block?.width ?? 25)
@@ -219,6 +203,7 @@ class LevelDesignerViewModel: ObservableObject {
             guard validator.isValidSize(peg: selectedPeg, diameter: newDiameter, gameboard: gameboard) else {
                 return
             }
+
             gameboard.resizePeg(peg: selectedPeg, newDiameter: newDiameter)
             objectWillChange.send()
         }
@@ -229,6 +214,7 @@ class LevelDesignerViewModel: ObservableObject {
             guard validator.isValidBlockHeight(block: selectedBlock, newHeight: newHeight, gameboard: gameboard) else {
                 return
             }
+
             gameboard.resizeBlockHeight(block: selectedBlock, newHeight: newHeight)
             objectWillChange.send()
         }
@@ -239,6 +225,7 @@ class LevelDesignerViewModel: ObservableObject {
             guard validator.isValidBlockWidth(block: selectedBlock, newWidth: newWidth, gameboard: gameboard) else {
                 return
             }
+
             gameboard.resizeBlockWidth(block: selectedBlock, newWidth: newWidth)
             objectWillChange.send()
         }
@@ -258,6 +245,7 @@ class LevelDesignerViewModel: ObservableObject {
                                                  gameboard: gameboard) else {
                 return
             }
+
             gameboard.rotateBlock(block: selectedBlock, newAngle: newAngle)
             objectWillChange.send()
         }
@@ -266,12 +254,16 @@ class LevelDesignerViewModel: ObservableObject {
     func reset() {
         self.gameboard.reset()
         self.pegsCountByType = [:]
+        resetSelection()
+        objectWillChange.send()
+    }
+
+    private func resetSelection() {
         self.selectedPeg = nil
         self.selectedBlock = nil
         self.rotation = nil
         self.diameter = nil
         self.height = nil
         self.width = nil
-        objectWillChange.send()
     }
 }

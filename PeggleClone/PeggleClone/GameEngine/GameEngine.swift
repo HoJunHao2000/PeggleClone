@@ -41,8 +41,8 @@ class GameEngine {
     private(set) var pegs: [PegGameObject]
     private(set) var blocks: [BlockGameObject]
     private(set) var bucket: BucketGameObject
-    private(set) var removedPegs: Set<PegGameObject>
     private(set) var ball: BallGameObject?
+    private(set) var removedPegs: Set<PegGameObject>
     private(set) var score: Int
     private(set) var ballsRemaining: Int
     private(set) var pegsRemainingByType: [PegType: Int]
@@ -73,7 +73,7 @@ class GameEngine {
     var isReadyToShoot: Bool {
         assert(checkRepresentation())
 
-        return !isGameOver && ballsRemaining > 0 && ball == nil
+        return !isGameOver && !isWin && ballsRemaining > 0 && ball == nil
     }
 
     var isBallOutOfBounds: Bool {
@@ -99,13 +99,13 @@ class GameEngine {
     var isGameOver: Bool {
         assert(checkRepresentation())
 
-        return (ballsRemaining == 0 && ball == nil) && pegsRemainingByType[.GoalPeg, default: 1] > 0
+        return (ballsRemaining == 0 && ball == nil) && pegsRemainingByType[.GoalPeg, default: 0] > 0
     }
 
     var isWin: Bool {
         assert(checkRepresentation())
 
-        return ballsRemaining >= 0 && pegsRemainingByType[.GoalPeg, default: 0] == 0
+        return pegsRemainingByType[.GoalPeg, default: 0] == 0
     }
 
     func launchBall(point: CGPoint) {
@@ -118,9 +118,12 @@ class GameEngine {
         let newBall = makeNewBall(point: point)
         physicsEngine.addPhysicsObject(physicsObject: newBall.physicsObject)
         ball = newBall
-        ballsRemaining -= 1
 
         assert(checkRepresentation())
+    }
+
+    func setIsSpooky() {
+        isSpooky = true
     }
 
     func update(timeDelta: TimeInterval) {
@@ -136,20 +139,6 @@ class GameEngine {
         removeBallAndPegsIfExit()
 
         assert(checkRepresentation())
-    }
-
-    func applyPowerUps() {
-        guard ball != nil && !isGameOver && !isWin else {
-            return
-        }
-
-        for peg in pegs where !removedPegs.contains(peg) {
-            peg.powerup?.powerup(peg: peg, gameEngine: self)
-        }
-    }
-
-    func setIsSpooky() {
-        isSpooky = true
     }
 
     func reset() {
@@ -171,6 +160,16 @@ class GameEngine {
         addPhysicsBoundary(boardSize: gameboard.boardSize)
 
         assert(checkRepresentation())
+    }
+
+    private func applyPowerUps() {
+        guard ball != nil && !isGameOver && !isWin else {
+            return
+        }
+
+        for peg in pegs where !removedPegs.contains(peg) {
+            peg.powerup?.powerup(peg: peg, gameEngine: self)
+        }
     }
 
     private func addPegsBlocksIntoGame(pegs: [Peg], blocks: [Block]) {
@@ -222,7 +221,7 @@ class GameEngine {
                                      initialForce: GameEngine.GRAVITY,
                                      initialVelocity: initialVelocity,
                                      diameter: BallGameObject.DEFAULT_BALL_DIAMETER)
-
+        ballsRemaining -= 1
         return newBall
     }
 
@@ -240,8 +239,7 @@ class GameEngine {
         }
 
         if isSpooky {
-            let oldPosition = ball.position
-            let newPosition = CGPoint(x: oldPosition.x, y: BallGameObject.DEFAULT_BALL_DIAMETER / 2)
+            let newPosition = CGPoint(x: ball.position.x, y: BallGameObject.DEFAULT_BALL_DIAMETER / 2)
             ball.physicsObject.setPosition(newPosition: newPosition)
             ball.physicsObject.setVelocity(newVelocity: .zero)
 
@@ -270,25 +268,16 @@ class GameEngine {
         ]
 
         let numOfOrangeLeft = pegsRemainingByType[.GoalPeg] ?? 0
+        let multiplier = numOfOrangeLeft == 0 ? 100
+                        : numOfOrangeLeft < 4 ? 10
+                        : numOfOrangeLeft < 8 ? 5
+                        : numOfOrangeLeft < 11 ? 3
+                        : 1
 
-        var multiplier: Int = 1
-        if numOfOrangeLeft == 0 {
-            multiplier = 100
-        } else if numOfOrangeLeft < 4 {
-            multiplier = 10
-        } else if numOfOrangeLeft < 8 {
-            multiplier = 5
-        } else if numOfOrangeLeft < 11 {
-            multiplier = 3
-        }
-
-        var totalScore = 0
         for (pegType, count) in pegHitsCount {
-            let basePoints = pegPointMap[pegType] ?? 0
-            totalScore += basePoints * count
+            score += pegPointMap[pegType] ?? 1 * count * multiplier
         }
 
-        score += (totalScore * multiplier)
         pegHitsCount = [:]
     }
 
@@ -312,12 +301,6 @@ class GameEngine {
     }
 
     private func checkRepresentation() -> Bool {
-        // totals pegs in game engine must equal pegs in gameboard
-//        guard gameboard.pegs.count == pegs.count else {
-//            print("failed on peg count")
-//            return false
-//        }
-
         // number of removed pegs must be not more than number of pegs
         guard removedPegs.count <= pegs.count else {
             print("failed removedpeg count more than peg count")

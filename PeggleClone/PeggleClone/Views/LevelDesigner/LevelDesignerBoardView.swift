@@ -36,6 +36,7 @@ private struct GameboardView: View {
                 guard !viewModel.isDelete else {
                     return
                 }
+
                 if viewModel.pegtype != nil {
                     viewModel.addPeg(at: gestureLocation)
                 } else {
@@ -193,13 +194,13 @@ private struct SlidersView: View {
             Text("Diameter")
             Slider(value: Binding<Double>(
                 get: {
-                    if let diameter = self.viewModel.selectedPeg?.diameter {
+                    if let diameter = viewModel.selectedPeg?.diameter {
                         return diameter
                     }
                     return Peg.DEFAULT_PEG_DIAMETER
                 },
                 set: { newValue in
-                    if self.viewModel.selectedPeg != nil {
+                    if viewModel.selectedPeg != nil {
                         viewModel.resizePeg(newDiameter: newValue)
                     }
                 }

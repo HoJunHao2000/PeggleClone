@@ -22,9 +22,9 @@ class Kaboom: PowerUp {
 
         peg.physicsObject.incrementHitCount()
 
-        if Utils.distanceBetween(point1: ball.position, point2: peg.position)
-            < Kaboom.EXPLOSION_RADIUS + (peg.diameter / 2) + (ball.diameter / 2) {
-            let vector = CGVector(dx: ball.position.x - peg.position.x, dy: ball.position.y - peg.position.y)
+        let maxDistance = Kaboom.EXPLOSION_RADIUS + (peg.diameter / 2) + (ball.diameter / 2)
+        if Utils.distanceBetween(point1: ball.position, point2: peg.position) < maxDistance {
+            let vector = Utils.vectorBetweenTwoPoints(ball.position, peg.position)
             let normalisedVector = Utils.normalize(vector)
             let newVelocity = Utils.scaleBy(normalisedVector, n: GameEngine.INIITAL_BALL_SPEED * 1.5)
             ball.physicsObject.setVelocity(newVelocity: newVelocity)
@@ -32,8 +32,8 @@ class Kaboom: PowerUp {
 
         for otherPeg in gameEngine.pegs
         where otherPeg != peg && !gameEngine.removedPegs.contains(otherPeg) {
-            if Utils.distanceBetween(point1: otherPeg.position, point2: peg.position)
-                <= (otherPeg.diameter / 2) + (peg.diameter / 2) + Kaboom.EXPLOSION_RADIUS {
+            let maxDistance = Kaboom.EXPLOSION_RADIUS + (otherPeg.diameter / 2) + (peg.diameter / 2)
+            if Utils.distanceBetween(point1: otherPeg.position, point2: peg.position) <= maxDistance {
                 otherPeg.physicsObject.incrementHitCount()
                 otherPeg.powerup?.powerup(peg: otherPeg, gameEngine: gameEngine)
                 if otherPeg.pegtype != .KaboomPeg {

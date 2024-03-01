@@ -24,8 +24,4 @@ class StubbornPegGameObject: PegGameObject {
     override var isLit: Bool {
         false
     }
-
-    override var shouldRemove: Bool {
-        false
-    }
 }

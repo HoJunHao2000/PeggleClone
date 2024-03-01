@@ -76,6 +76,7 @@ class GameViewModel: ObservableObject {
         guard hasPreloaded else {
             return false
         }
+
         return gameEngine.isGameOver
     }
 
@@ -83,6 +84,7 @@ class GameViewModel: ObservableObject {
         guard hasPreloaded else {
             return false
         }
+
         return gameEngine.isWin
     }
 
@@ -110,6 +112,7 @@ class GameViewModel: ObservableObject {
         guard gameEngine.isReadyToShoot && at.y >= 0 else {
             return
         }
+
         gameEngine.launchBall(point: at)
         createDisplayLink()
     }
@@ -122,11 +125,8 @@ class GameViewModel: ObservableObject {
     func adjustCannonAngle(point: CGPoint) {
         let deltaX = point.x - (boardSize.width / 2)
         let deltaY = point.y - 0
-
         let angleRadians = atan2(deltaY, deltaX)
-
         let angleDegrees = angleRadians * 180.0 / Double.pi
-
         let angleToRotate = -(90.0 - angleDegrees)
 
         guard angleToRotate <= 90 && angleToRotate >= -90 else {
