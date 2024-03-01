@@ -43,5 +43,7 @@ class Kaboom: PowerUp {
         }
 
         peg.physicsObject.setHitCount(newHitCount: PegGameObject.MAX_HIT_COUNT + 1)
+
+        SoundManager.instance.playSound(.boom)
     }
 }

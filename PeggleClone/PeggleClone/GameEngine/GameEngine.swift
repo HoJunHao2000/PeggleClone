@@ -141,27 +141,6 @@ class GameEngine {
         assert(checkRepresentation())
     }
 
-    func reset() {
-        assert(checkRepresentation())
-
-        physicsEngine = PhysicsEngine()
-        pegs = []
-        removedPegs = []
-        pegsRemainingByType = [:]
-        pegHitsCount = [:]
-        ball = nil
-        score = 0
-        ballsRemaining = GameEngine.INITIAL_NUMBER_OF_BALLS
-        bucket = BucketGameObject(boardSize: gameboard.boardSize)
-        isSpooky = false
-
-        physicsEngine.addPhysicsObject(physicsObject: bucket.physicsObject)
-        addPegsBlocksIntoGame(pegs: gameboard.pegs, blocks: gameboard.blocks)
-        addPhysicsBoundary(boardSize: gameboard.boardSize)
-
-        assert(checkRepresentation())
-    }
-
     private func applyPowerUps() {
         guard ball != nil && !isGameOver && !isWin else {
             return
@@ -231,6 +210,7 @@ class GameEngine {
         }
 
         if bucket.isBallEnter {
+            SoundManager.instance.playSound(.score)
             bucket.physicsObject.resetHitCount()
             if !isSpooky {
                 ballsRemaining += 1
@@ -239,6 +219,7 @@ class GameEngine {
         }
 
         if isSpooky {
+            SoundManager.instance.playSound(.spooky)
             let newPosition = CGPoint(x: ball.position.x, y: BallGameObject.DEFAULT_BALL_DIAMETER / 2)
             ball.physicsObject.setPosition(newPosition: newPosition)
             ball.physicsObject.setVelocity(newVelocity: .zero)

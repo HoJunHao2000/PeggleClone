@@ -17,6 +17,7 @@ class Spooky: PowerUp {
             return
         }
 
+        SoundManager.instance.playSound(.spooky)
         gameEngine.setIsSpooky()
         peg.physicsObject.incrementHitCount()
     }

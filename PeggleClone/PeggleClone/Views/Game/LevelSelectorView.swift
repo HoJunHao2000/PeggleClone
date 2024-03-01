@@ -59,6 +59,8 @@ struct LevelSelectorView: View {
 
     private func levelRowView(gameboard: Gameboard, index: Int) -> some View {
         Button(action: {
+            SoundManager.instance.stopSound(.main)
+            SoundManager.instance.playSound(.click)
             isGameView[index] = true
         }) {
             Text(gameboard.name)
@@ -82,6 +84,7 @@ struct LevelSelectorView: View {
         VStack {
             HStack {
                 Button(action: {
+                    SoundManager.instance.playSound(.click)
                     dismiss()
                 }) {
                     Image(systemName: "chevron.left")

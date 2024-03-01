@@ -50,14 +50,17 @@ class CirclePhysicsObject: PhysicsObject {
     }
 
     override func collidesWithCircle(_ circle: CirclePhysicsObject) {
+        SoundManager.instance.playSound(.hitpeg)
         collisionHandler.handleCircleCircleCollision(circle1: self, circle2: circle)
     }
 
     override func collidesWithLine(_ line: LinePhysicsObject) {
+        SoundManager.instance.playSound(.hitwall)
         collisionHandler.handleCircleLineCollision(circle: self, line: line)
     }
 
     override func collidesWithRectangle(_ rect: RectPhysicsObject) {
+        SoundManager.instance.playSound(.hitblock)
         collisionHandler.handleCircleRectCollision(circle: self, rect: rect)
     }
 }

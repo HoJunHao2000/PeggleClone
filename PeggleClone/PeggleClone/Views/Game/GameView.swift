@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct GameView: View {
+    @Environment(\.dismiss) var dismiss
+
     @ObservedObject var gameViewModel: GameViewModel
 
     init(gameboard: Gameboard) {
@@ -26,10 +28,13 @@ struct GameView: View {
         .alert("Game Over",
                isPresented: Binding(get: { gameViewModel.isGameOver }, set: { _, _ in }),
                actions: {
-                   Button("Replay", action: { gameViewModel.reset() })
-                       .onAppear(perform: {
-                           gameViewModel.end()
-                       })
+                    Button("OK", action: {
+                        dismiss()
+                    })
+                   .onAppear(perform: {
+                       gameViewModel.end()
+                       SoundManager.instance.playSound(.lose)
+                   })
                },
                message: {
                    Text("Your Score: \(gameViewModel.score)")
@@ -37,14 +42,25 @@ struct GameView: View {
         .alert("You Won!",
                isPresented: Binding(get: { gameViewModel.isWin }, set: { _, _ in }),
                actions: {
-                   Button("Replay", action: { gameViewModel.reset() })
-                       .onAppear(perform: {
-                           gameViewModel.end()
-                       })
-               },
-               message: {
-                   Text("Your Score: \(gameViewModel.score)")
+                Button("OK", action: {
+                    dismiss()
+                })
+               .onAppear(perform: {
+                   gameViewModel.end()
+                   SoundManager.instance.playSound(.win)
                })
+           },
+           message: {
+               Text("Your Score: \(gameViewModel.score)")
+           })
+        .onAppear {
+            SoundManager.instance.playSound(.game, isLoop: true)
+        }
+        .onDisappear {
+            SoundManager.instance.playSound(.click)
+            SoundManager.instance.stopSound(.game)
+            SoundManager.instance.playSound(.main, isLoop: true)
+        }
     }
 }
 
@@ -64,20 +80,21 @@ private struct GameLevelView: View {
                 }
             }
             .onAppear {
-                if !gameViewModel.hasPreloaded {
-                    gameViewModel.loadPreloadGameboard(boardSize: geometry.size)
-                }
+                gameViewModel.loadPreloadGameboard(boardSize: geometry.size)
             }
             .gesture(
                 DragGesture()
                     .onChanged { gesture in
+                        SoundManager.instance.playSound(.rotate)
                         gameViewModel.adjustCannonAngle(point: gesture.location)
                     }
                     .onEnded { gesture in
+                        SoundManager.instance.playSound(.cannon)
                         gameViewModel.shoot(at: gesture.location)
                     }
             )
             .onTapGesture { gestureLocation in
+                SoundManager.instance.playSound(.cannon)
                 gameViewModel.adjustCannonAngle(point: gestureLocation)
                 gameViewModel.shoot(at: gestureLocation)
             }
@@ -125,7 +142,7 @@ private struct GameLevelView: View {
     }
 
     private func ballView(ball: BallGameObject) -> some View {
-        Image("ball")
+        Image(gameViewModel.isSpooky ? "spooky-ball" : "ball")
             .resizable()
             .scaledToFit()
             .frame(width: ball.diameter)
@@ -176,7 +193,7 @@ private struct GameLevelView: View {
 
         return ForEach(blocks, id: \.self) { block in
             RoundedRectangle(cornerRadius: 10)
-                .fill(.black)
+                .fill(.brown)
                 .frame(width: block.width, height: block.height)
                 .rotationEffect(.degrees(block.rotation))
                 .position(block.position)

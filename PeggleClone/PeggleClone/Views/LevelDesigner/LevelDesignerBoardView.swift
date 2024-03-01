@@ -120,7 +120,7 @@ private struct GameboardView: View {
         return ZStack {
             ForEach(blocks, id: \.self) { block in
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(.black)
+                    .fill(.brown)
                     .frame(width: block.width, height: block.height)
                     .rotationEffect(.degrees(block.rotation))
                     .position(block.position)
@@ -179,6 +179,7 @@ private struct SlidersView: View {
     private var backButtonView: some View {
         Button(action: {
             dismiss()
+            SoundManager.instance.playSound(.main)
         }) {
          Image(systemName: "chevron.left")
              .foregroundColor(.white)
@@ -329,7 +330,7 @@ private struct ButtonsView: View {
         }) {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(.black)
+                    .fill(.brown)
                     .frame(width: 40, height: 75)
                     .opacity(viewModel.pegtype == nil ? 1.0 : 0.5)
                 Text("\(viewModel.gameboard.blocks.count)")

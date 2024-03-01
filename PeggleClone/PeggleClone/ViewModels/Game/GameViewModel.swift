@@ -92,7 +92,15 @@ class GameViewModel: ObservableObject {
         gameEngine.ballsRemaining
     }
 
+    var isSpooky: Bool {
+        gameEngine.isSpooky
+    }
+
     func loadPreloadGameboard(boardSize: CGSize) {
+        guard !hasPreloaded else {
+            return
+        }
+
         if let preloadedGameboard = preloader.load(id: preload, boardSize: boardSize) {
             self.gameEngine = GameEngine(gameboard: preloadedGameboard)
             self.cannonAngle = 0.0
@@ -115,11 +123,6 @@ class GameViewModel: ObservableObject {
 
         gameEngine.launchBall(point: at)
         createDisplayLink()
-    }
-
-    func reset() {
-        gameEngine.reset()
-        objectWillChange.send()
     }
 
     func adjustCannonAngle(point: CGPoint) {

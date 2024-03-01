@@ -16,6 +16,9 @@ struct MainView: View {
             backgroundView
             menuOptionsView
         }
+        .onAppear {
+            SoundManager.instance.playSound(.main, isLoop: true)
+        }
     }
 
     private var backgroundView: some View {
@@ -39,6 +42,7 @@ struct MainView: View {
 
     private var playButtonView: some View {
         Button(action: {
+            SoundManager.instance.playSound(.click)
             isLevelSelectorView = true
             isLevelDesignerView = false
         }) {
@@ -61,6 +65,8 @@ struct MainView: View {
 
     private var levelDesignerButtonView: some View {
         Button(action: {
+            SoundManager.instance.stopSound(.main)
+            SoundManager.instance.playSound(.click)
             isLevelSelectorView = false
             isLevelDesignerView = true
         }) {
