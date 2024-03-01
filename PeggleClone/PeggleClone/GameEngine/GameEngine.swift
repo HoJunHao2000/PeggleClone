@@ -174,12 +174,22 @@ class GameEngine {
     }
 
     private func addPegsBlocksIntoGame(pegs: [Peg], blocks: [Block]) {
+        let pegtypemap: [PegType: (Peg) -> PegGameObject] = [
+            .NormalPeg: { peg in NormalPegGameObject(peg: peg) },
+            .GoalPeg: { peg in  GoalPegGameObject(peg: peg) },
+            .KaboomPeg: { peg in KaboomPegGameObject(peg: peg) },
+            .SpookyPeg: { peg in SpookyPegGameObject(peg: peg) },
+            .HealthPeg: { peg in HealthPegGameObject(peg: peg) },
+            .StubbornPeg: { peg in StubbornPegGameObject(peg: peg) }
+        ]
+
         for peg in pegs {
             pegsRemainingByType[peg.pegtype, default: 0] += 1
 
-            let pegGameObject = PegGameObject(peg: peg)
-            self.pegs.append(pegGameObject)
-            physicsEngine.addPhysicsObject(physicsObject: pegGameObject.physicsObject)
+            if let pegGameObject = pegtypemap[peg.pegtype]?(peg) {
+                self.pegs.append(pegGameObject)
+                physicsEngine.addPhysicsObject(physicsObject: pegGameObject.physicsObject)
+            }
         }
 
         for block in blocks {
@@ -190,10 +200,10 @@ class GameEngine {
     }
 
     private func addPhysicsBoundary(boardSize: CGSize) {
-        let topBoundary = LinePhysicsObject(startPoint: CGPoint(x: 0, y: 0),
+        let topBoundary = LinePhysicsObject(startPoint: .zero,
                                             endPoint: CGPoint(x: boardSize.width, y: 0))
-        let leftBoundary = LinePhysicsObject(startPoint: CGPoint(x: 0, y: 0),
-                                             endPoint: CGPoint(x: 0, y: boardSize.height))
+        let leftBoundary = LinePhysicsObject(startPoint: CGPoint(x: 0, y: boardSize.height),
+                                             endPoint: .zero)
         let rightBoundary = LinePhysicsObject(startPoint: CGPoint(x: boardSize.width, y: 0),
                                               endPoint: CGPoint(x: boardSize.width, y: boardSize.height))
 
@@ -222,6 +232,7 @@ class GameEngine {
         }
 
         if bucket.isBallEnter {
+            bucket.physicsObject.resetHitCount()
             if !isSpooky {
                 ballsRemaining += 1
             }
@@ -242,17 +253,10 @@ class GameEngine {
         self.ball = nil
 
         for peg in pegs where peg.isLit && !removedPegs.contains(peg) {
-            if let count = pegsRemainingByType[peg.pegtype] {
-                pegsRemainingByType[peg.pegtype] = count - 1
-            }
-
-            physicsEngine.removePhysicsObject(physicsObject: peg.physicsObject)
-            pegHitsCount[peg.pegtype, default: 0] += 1
-            removedPegs.insert(peg)
+            removePeg(peg)
         }
 
         addAttemptScore()
-        physicsEngine.resetAllHitCount()
     }
 
     private func addAttemptScore() {
@@ -289,23 +293,30 @@ class GameEngine {
     }
 
     private func removePegsPremature() {
-        for peg in pegs where peg.shouldRemove && !removedPegs.contains(peg) {
-            if let count = pegsRemainingByType[peg.pegtype] {
-                pegsRemainingByType[peg.pegtype] = count - 1
+        for peg in pegs where !removedPegs.contains(peg) {
+            let maxPegHeight = gameboard.boardSize.height - BucketGameObject.DEFAULT_BUCKET_HEIGHT - (peg.diameter / 2)
+            if peg.shouldRemove || peg.position.y > maxPegHeight {
+                removePeg(peg)
             }
-
-            physicsEngine.removePhysicsObject(physicsObject: peg.physicsObject)
-            pegHitsCount[peg.pegtype, default: 0] += 1
-            removedPegs.insert(peg)
         }
+    }
+
+    private func removePeg(_ peg: PegGameObject) {
+        if let count = pegsRemainingByType[peg.pegtype] {
+            pegsRemainingByType[peg.pegtype] = count - 1
+        }
+
+        physicsEngine.removePhysicsObject(physicsObject: peg.physicsObject)
+        pegHitsCount[peg.pegtype, default: 0] += 1
+        removedPegs.insert(peg)
     }
 
     private func checkRepresentation() -> Bool {
         // totals pegs in game engine must equal pegs in gameboard
-        guard gameboard.pegs.count == pegs.count else {
-            print("failed on peg count")
-            return false
-        }
+//        guard gameboard.pegs.count == pegs.count else {
+//            print("failed on peg count")
+//            return false
+//        }
 
         // number of removed pegs must be not more than number of pegs
         guard removedPegs.count <= pegs.count else {

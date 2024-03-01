@@ -19,25 +19,20 @@ import Foundation
 class PegGameObject {
     static let MAX_HIT_COUNT: Int = 240
     static let DEFAULT_PEG_ELASTICITY: Double = 0.6
-
-    static let pegTypePowerUpMap: [PegType: PowerUp] = [
-        .KaboomPeg: KaBoom(),
-        .SpookyPeg: Spooky()
-    ]
+    static let DEFAULT_PEG_MASS: Double = 100
 
     private(set) var physicsObject: CirclePhysicsObject
     let pegtype: PegType
     let powerup: PowerUp?
 
-    init(peg: Peg) {
-        self.physicsObject = CirclePhysicsObject(position: peg.position,
-                                                 velocity: CGVector(dx: 0, dy: 0),
-                                                 force: CGVector(dx: 0, dy: 0),
-                                                 isMoveable: false,
-                                                 diameter: peg.diameter,
-                                                 elasticity: PegGameObject.DEFAULT_PEG_ELASTICITY)
-        self.pegtype = peg.pegtype
-        self.powerup = PegGameObject.pegTypePowerUpMap[peg.pegtype]
+    init(powerup: PowerUp?, pegtype: PegType, physicsBody: CirclePhysicsObject) {
+        self.pegtype = pegtype
+        self.powerup = powerup
+        self.physicsObject = physicsBody
+    }
+
+    var hitCount: Int {
+        physicsObject.hitCount
     }
 
     var diameter: Double {

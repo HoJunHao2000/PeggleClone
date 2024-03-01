@@ -26,8 +26,8 @@ class Utils {
         // Clamp the projected point to the line segment
         let clampedPoint = CGPoint(x: max(min(projectedPoint.x, max(lineStart.x, lineEnd.x)),
                                           min(lineStart.x, lineEnd.x)),
-                                    y: max(min(projectedPoint.y, max(lineStart.y, lineEnd.y)),
-                                           min(lineStart.y, lineEnd.y)))
+                                   y: max(min(projectedPoint.y, max(lineStart.y, lineEnd.y)),
+                                          min(lineStart.y, lineEnd.y)))
 
         return clampedPoint
     }
@@ -114,5 +114,25 @@ class Utils {
         let t = (s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y)
 
         return s >= 0 && s <= 1 && t >= 0 && t <= 1
+    }
+
+    static func addVectors(_ vector1: CGVector, _ vector2: CGVector) -> CGVector {
+        CGVector(dx: vector1.dx + vector2.dx, dy: vector1.dy + vector2.dy)
+    }
+
+    static func minusVectors(_ vector1: CGVector, _ vector2: CGVector) -> CGVector {
+        CGVector(dx: vector1.dx - vector2.dx, dy: vector1.dy - vector2.dy)
+    }
+
+    static func vectorBetweenTwoPoints(_ point1: CGPoint, _ point2: CGPoint) -> CGVector {
+        CGVector(dx: point1.x - point2.x, dy: point1.y - point2.y)
+    }
+
+    static func addVectorToPosition(point: CGPoint, vector: CGVector) -> CGPoint {
+        CGPoint(x: point.x + vector.dx, y: point.y + vector.dy)
+    }
+
+    static func minusVectorFromPosition(point: CGPoint, vector: CGVector) -> CGPoint {
+        CGPoint(x: point.x - vector.dx, y: point.y - vector.dy)
     }
 }

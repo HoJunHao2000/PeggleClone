@@ -106,31 +106,19 @@ private struct GameLevelView: View {
         let pegs = gameViewModel.pegs
         let removedPegs = gameViewModel.gameEngine.removedPegs
 
-        let pegViewMap: [PegType: (CGFloat, CGPoint, Bool) -> AnyView] = [
-            .NormalPeg: { width, position, isLit in AnyView(normalPegView(width: width,
-                                                                          position: position,
-                                                                          isLit: isLit)) },
-            .GoalPeg: { width, position, isLit in AnyView(goalPegView(width: width,
-                                                                      position: position,
-                                                                      isLit: isLit)) },
-            .KaboomPeg: { width, position, isLit in AnyView(kaboomPegView(width: width,
-                                                                          position: position,
-                                                                          isLit: isLit)) },
-            .SpookyPeg: { width, position, isLit in AnyView(spookyPegView(width: width,
-                                                                          position: position,
-                                                                          isLit: isLit)) },
-            .StubbornPeg: { width, position, isLit in AnyView(stubbornPegView(width: width,
-                                                                              position: position,
-                                                                              isLit: isLit)) },
-            .HealthPeg: { width, position, isLit in AnyView(healthPegView(width: width,
-                                                                          position: position,
-                                                                          isLit: isLit)) }
+        let pegViewMap: [PegType: (PegGameObject) -> AnyView] = [
+            .NormalPeg: { peg in AnyView(normalPegView(peg: peg)) },
+            .GoalPeg: { peg in AnyView(goalPegView(peg: peg)) },
+            .KaboomPeg: { peg in AnyView(kaboomPegView(peg: peg)) },
+            .SpookyPeg: { peg in AnyView(spookyPegView(peg: peg)) },
+            .StubbornPeg: { peg in AnyView(stubbornPegView(peg: peg)) },
+            .HealthPeg: { peg in AnyView(healthPegView(peg: peg)) }
         ]
 
         return ForEach(pegs.indices, id: \.self) { index in
             let peg = pegs[index]
             let opacity: Double = removedPegs.contains(peg) ? 0.0 : 1.0
-            pegViewMap[peg.pegtype]?(peg.diameter, peg.position, peg.isLit)
+            pegViewMap[peg.pegtype]?(peg)
                 .opacity(opacity)
                 .animation(.easeOut(duration: 0.5), value: UUID())
         }
@@ -152,28 +140,35 @@ private struct GameLevelView: View {
             .position(position)
     }
 
-    private func normalPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
-        pegView(imageName: isLit ? "peg-blue-glow" : "peg-blue", width: width, position: position)
+    private func normalPegView(peg: PegGameObject) -> some View {
+        pegView(imageName: peg.isLit ? "peg-blue-glow" : "peg-blue", width: peg.diameter, position: peg.position)
     }
 
-    private func goalPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
-        pegView(imageName: isLit ? "peg-orange-glow" : "peg-orange", width: width, position: position)
+    private func goalPegView(peg: PegGameObject) -> some View {
+        pegView(imageName: peg.isLit ? "peg-orange-glow" : "peg-orange", width: peg.diameter, position: peg.position)
     }
 
-    private func kaboomPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
-        pegView(imageName: isLit ? "peg-green-glow" : "peg-green", width: width, position: position)
+    private func kaboomPegView(peg: PegGameObject) -> some View {
+        pegView(imageName: peg.isLit ? "peg-green-glow" : "peg-green", width: peg.diameter, position: peg.position)
     }
 
-    private func spookyPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
-        pegView(imageName: isLit ? "peg-purple-glow" : "peg-purple", width: width, position: position)
+    private func spookyPegView(peg: PegGameObject) -> some View {
+        pegView(imageName: peg.isLit ? "peg-purple-glow" : "peg-purple", width: peg.diameter, position: peg.position)
     }
 
-    private func stubbornPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
-        pegView(imageName: isLit ? "peg-grey-glow" : "peg-grey", width: width, position: position)
+    private func stubbornPegView(peg: PegGameObject) -> some View {
+        pegView(imageName: peg.isLit ? "peg-grey-glow" : "peg-grey", width: peg.diameter, position: peg.position)
     }
 
-    private func healthPegView(width: CGFloat, position: CGPoint, isLit: Bool) -> some View {
-        pegView(imageName: isLit ? "peg-yellow-glow" : "peg-yellow", width: width, position: position)
+    private func healthPegView(peg: PegGameObject) -> some View {
+        let hitCountMap: [Int: String] = [
+            1: "peg-yellow-glow",
+            2: "peg-pink-glow",
+            3: "peg-red"
+        ]
+        return pegView(imageName: hitCountMap[peg.hitCount] ?? "peg-yellow",
+                       width: peg.diameter,
+                       position: peg.position)
     }
 
     private var blocksView: some View {
@@ -218,6 +213,7 @@ private struct StatsView: View {
 
     private var backButtonView: some View {
         Button(action: {
+            gameViewModel.end()
             dismiss()
         }) {
             Image(systemName: "chevron.left")

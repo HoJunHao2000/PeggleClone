@@ -92,7 +92,6 @@ class GameViewModel: ObservableObject {
 
     func loadPreloadGameboard(boardSize: CGSize) {
         if let preloadedGameboard = preloader.load(id: preload, boardSize: boardSize) {
-            print("loaded preloaded")
             self.gameEngine = GameEngine(gameboard: preloadedGameboard)
             self.cannonAngle = 0.0
             self.previousTime = Date().timeIntervalSince1970
@@ -117,6 +116,7 @@ class GameViewModel: ObservableObject {
 
     func reset() {
         gameEngine.reset()
+        objectWillChange.send()
     }
 
     func adjustCannonAngle(point: CGPoint) {
