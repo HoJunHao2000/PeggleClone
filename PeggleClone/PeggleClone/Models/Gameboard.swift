@@ -8,7 +8,10 @@
 
  ## Representation Invariants for Every `Gameboard`:
  - All pegs must be within the boundaries of the gameboard.
+ - All blocks must be within the boundaries of the gameboard.
  - Pegs must not overlap with each other.
+ - Blocks must not overlap with each other.
+ - Pegs must not overlap with blocks.
  - Must have unique identifier
 
  - Authors: CS3217, HoJunHao2000
@@ -159,7 +162,9 @@ class Gameboard {
 
         assert(checkRepresentation())
     }
+}
 
+extension Gameboard {
     private func checkRepresentation() -> Bool {
         // Check if all pegs are within the board
         guard checkRepresentationPegsOnBoard() else {
@@ -172,7 +177,7 @@ class Gameboard {
         }
 
         // Check if blocks are within the board
-        guard checkRepresentationPegsOnBoard() else {
+        guard checkRepresentationBlocksOnBoard() else {
             return false
         }
 

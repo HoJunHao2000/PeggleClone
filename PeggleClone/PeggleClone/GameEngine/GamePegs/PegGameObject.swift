@@ -38,6 +38,10 @@ class PegGameObject {
         physicsObject.diameter
     }
 
+    var rotation: Double {
+        physicsObject.rotation
+    }
+
     var position: CGPoint {
         physicsObject.position
     }

@@ -2,28 +2,17 @@
  The `GameEngine` class represents the game engine for a Peggle-like game.
  It manages the game state, physics, and game logic.
 
- ## Information contained in `GameEngine`:
- - Gameboard: The gameboard on which the game is played.
- - Physics Engine: Manages the physics of the game objects.
- - Pegs: The pegs present on the gameboard.
- - Removed Pegs: Pegs that have been removed from the gameboard.
- - Ball: The ball currently in play.
- - Score: The player's score.
- - Balls Remaining: The number of balls remaining to be played.
- - isReadyToShoot: Whether the game is in a state to shoot another ball
- - isBallOutOfBounds: Whether the game ball is outside the boundary of game
-
  ## Representation Invariants for Every `GameEngine`:
- - The total number of pegs in the `pegs` array must equal the number of pegs in the `gameboard.pegs` array.
  - The number of removed pegs must be at least 0 and not more than the total number of pegs.
- - The score must be at least 0 and equal to the number of removed pegs.
- - The number of balls remaining must be at least 0 and not more than the initial number of balls.
- - If the `ball` is not `nil`, the number of balls remaining must be less than the initial number of balls.
+ - The score must be at least 0.
+ - The number of balls remaining must be at least 0.
  - If the `ball` is not `nil`, it must have a corresponding physics object in the `physicsEngine`.
  - If the `ball` is not `nil`, its position must be within the game boundary.
  - All pegs in the `pegs` array that are not in `removedPegs` must have a corresponding physics object
  in the `physicsEngine`.
  - All pegs in the `removedPegs` set must have been removed from the `physicsEngine`.
+ - All blocks in the `blocks` array must have a corresponding physics object in the `physicsEngine`
+ - Bucket must have a corresponding physics object in `physicsEngine`
 
  - Authors: CS3217, HoJunHao2000
  */
@@ -198,8 +187,7 @@ class GameEngine {
 
         let newBall = BallGameObject(initialPosition: initialPosition,
                                      initialForce: GameEngine.GRAVITY,
-                                     initialVelocity: initialVelocity,
-                                     diameter: BallGameObject.DEFAULT_BALL_DIAMETER)
+                                     initialVelocity: initialVelocity)
         ballsRemaining -= 1
         return newBall
     }
@@ -282,17 +270,17 @@ class GameEngine {
         pegHitsCount[peg.pegtype, default: 0] += 1
         removedPegs.insert(peg)
     }
+}
 
+extension GameEngine {
     private func checkRepresentation() -> Bool {
         // number of removed pegs must be not more than number of pegs
         guard removedPegs.count <= pegs.count else {
-            print("failed removedpeg count more than peg count")
             return false
         }
 
         // number of balls remaining must be at least 0
         guard ballsRemaining >= 0 else {
-            print("lesser than 0 balls")
             return false
         }
 
@@ -307,7 +295,6 @@ class GameEngine {
             guard mainBall.position.x >= 0,
                   mainBall.position.x <= gameboard.boardSize.width,
                   mainBall.position.y >= 0 else {
-                print("ball escape boundary")
                 return false
             }
         }
@@ -324,6 +311,17 @@ class GameEngine {
             where physicsEngine.physicsObjects.contains(where: { $0 === removedPeg.physicsObject }) {
                 return false
             }
+
+        // all blocks must have a corresponding physics object in the physics engine
+        for block in blocks
+            where !physicsEngine.physicsObjects.contains(where: { $0 === block.physicsObject }) {
+                return false
+            }
+
+        // bucket must have a corresponding physics object in the physics engine
+        guard physicsEngine.physicsObjects.contains(where: { $0 === bucket.physicsObject }) else {
+            return false
+        }
 
         return true
     }

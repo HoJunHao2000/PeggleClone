@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		461B479B2B9353C5003CCE77 /* PegGameObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B479A2B9353C5003CCE77 /* PegGameObjectTests.swift */; };
+		461B479D2B935BB3003CCE77 /* BallGameObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B479C2B935BB3003CCE77 /* BallGameObjectTests.swift */; };
+		461B479F2B935C05003CCE77 /* BlockGameObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B479E2B935C05003CCE77 /* BlockGameObjectTests.swift */; };
+		461B47A12B935CF4003CCE77 /* PhysicsObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B47A02B935CF4003CCE77 /* PhysicsObjectTests.swift */; };
+		461B47A32B935D27003CCE77 /* BucketGameObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B47A22B935D27003CCE77 /* BucketGameObjectTests.swift */; };
+		461B47A52B935EA9003CCE77 /* PhysicsEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B47A42B935EA9003CCE77 /* PhysicsEngineTests.swift */; };
+		461B47A72B936379003CCE77 /* CollisionHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B47A62B936379003CCE77 /* CollisionHandlerTests.swift */; };
+		461B47A92B936997003CCE77 /* IntersectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461B47A82B936997003CCE77 /* IntersectorTests.swift */; };
 		462845402B883561003E40D8 /* GameboardCoreDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4628453F2B883561003E40D8 /* GameboardCoreDataDelegate.swift */; };
 		462845422B8839A4003E40D8 /* GameboardCoreDataTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462845412B8839A4003E40D8 /* GameboardCoreDataTranslator.swift */; };
 		462845442B883A3A003E40D8 /* PegCoreDataTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462845432B883A3A003E40D8 /* PegCoreDataTranslator.swift */; };
@@ -26,12 +34,14 @@
 		464192C32B8375330098F746 /* PeggleCloneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464192C22B8375330098F746 /* PeggleCloneApp.swift */; };
 		464192C72B8375340098F746 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 464192C62B8375340098F746 /* Assets.xcassets */; };
 		464192CA2B8375340098F746 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 464192C92B8375340098F746 /* Preview Assets.xcassets */; };
-		464192D42B8375340098F746 /* PeggleCloneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464192D32B8375340098F746 /* PeggleCloneTests.swift */; };
 		464B06AA2B89D14100DD1A95 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06A92B89D14100DD1A95 /* MainView.swift */; };
 		464B06AC2B89E09900DD1A95 /* LevelSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */; };
 		464B06AE2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */; };
 		464B06B02B8AE59E00DD1A95 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464B06AF2B8AE59E00DD1A95 /* Block.swift */; };
 		466371462B91CBC900230A87 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466371452B91CBC900230A87 /* Utils.swift */; };
+		466F27422B933F4900536067 /* PersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466F27412B933F4900536067 /* PersistenceTests.swift */; };
+		466F27442B934CAC00536067 /* GameEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466F27432B934CAC00536067 /* GameEngineTests.swift */; };
+		467638D62B92FD4100072658 /* GameboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467638D52B92FD4100072658 /* GameboardTests.swift */; };
 		4698C5142B90A5BE00BB396B /* PegGameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4698C5132B90A5BE00BB396B /* PegGameObject.swift */; };
 		4698C5162B90A5E600BB396B /* NormalPegGameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4698C5152B90A5E600BB396B /* NormalPegGameObject.swift */; };
 		4698C5182B90A71B00BB396B /* GoalPegGameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4698C5172B90A71B00BB396B /* GoalPegGameObject.swift */; };
@@ -40,6 +50,10 @@
 		4698C51E2B90A90500BB396B /* StubbornPegGameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4698C51D2B90A90500BB396B /* StubbornPegGameObject.swift */; };
 		4698C5202B90A93900BB396B /* HealthPegGameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4698C51F2B90A93900BB396B /* HealthPegGameObject.swift */; };
 		469C636E2B8F69EE005A3896 /* PreloaderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C636D2B8F69EE005A3896 /* PreloaderDelegate.swift */; };
+		46CC0AE82B930CD300A0F367 /* PegTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CC0AE72B930CD300A0F367 /* PegTests.swift */; };
+		46CC0AEA2B930E9800A0F367 /* BlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CC0AE92B930E9800A0F367 /* BlockTests.swift */; };
+		46CC0AEC2B93109F00A0F367 /* LevelDesignerViewModelTestsOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CC0AEB2B93109F00A0F367 /* LevelDesignerViewModelTestsOne.swift */; };
+		46CC0AEE2B9326B000A0F367 /* LevelDesignerViewModelTestsTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CC0AED2B9326B000A0F367 /* LevelDesignerViewModelTestsTwo.swift */; };
 		46E5A3672B91F00600B255BC /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E5A3662B91F00600B255BC /* Sound.swift */; };
 		46E5A3692B91F00D00B255BC /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E5A3682B91F00D00B255BC /* SoundManager.swift */; };
 		46E5A37B2B921C7600B255BC /* hitstubborn.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 46E5A36C2B921C7600B255BC /* hitstubborn.mp3 */; };
@@ -84,6 +98,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		461B479A2B9353C5003CCE77 /* PegGameObjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PegGameObjectTests.swift; sourceTree = "<group>"; };
+		461B479C2B935BB3003CCE77 /* BallGameObjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BallGameObjectTests.swift; sourceTree = "<group>"; };
+		461B479E2B935C05003CCE77 /* BlockGameObjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockGameObjectTests.swift; sourceTree = "<group>"; };
+		461B47A02B935CF4003CCE77 /* PhysicsObjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsObjectTests.swift; sourceTree = "<group>"; };
+		461B47A22B935D27003CCE77 /* BucketGameObjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BucketGameObjectTests.swift; sourceTree = "<group>"; };
+		461B47A42B935EA9003CCE77 /* PhysicsEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsEngineTests.swift; sourceTree = "<group>"; };
+		461B47A62B936379003CCE77 /* CollisionHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionHandlerTests.swift; sourceTree = "<group>"; };
+		461B47A82B936997003CCE77 /* IntersectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntersectorTests.swift; sourceTree = "<group>"; };
 		4628453F2B883561003E40D8 /* GameboardCoreDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameboardCoreDataDelegate.swift; sourceTree = "<group>"; };
 		462845412B8839A4003E40D8 /* GameboardCoreDataTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameboardCoreDataTranslator.swift; sourceTree = "<group>"; };
 		462845432B883A3A003E40D8 /* PegCoreDataTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PegCoreDataTranslator.swift; sourceTree = "<group>"; };
@@ -105,12 +127,14 @@
 		464192C62B8375340098F746 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		464192C92B8375340098F746 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		464192CF2B8375340098F746 /* PeggleCloneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PeggleCloneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		464192D32B8375340098F746 /* PeggleCloneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeggleCloneTests.swift; sourceTree = "<group>"; };
 		464B06A92B89D14100DD1A95 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		464B06AB2B89E09900DD1A95 /* LevelSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectorView.swift; sourceTree = "<group>"; };
 		464B06AD2B8A39FD00DD1A95 /* LevelSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelSelectorViewModel.swift; sourceTree = "<group>"; };
 		464B06AF2B8AE59E00DD1A95 /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		466371452B91CBC900230A87 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		466F27412B933F4900536067 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
+		466F27432B934CAC00536067 /* GameEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEngineTests.swift; sourceTree = "<group>"; };
+		467638D52B92FD4100072658 /* GameboardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameboardTests.swift; sourceTree = "<group>"; };
 		4698C5132B90A5BE00BB396B /* PegGameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PegGameObject.swift; sourceTree = "<group>"; };
 		4698C5152B90A5E600BB396B /* NormalPegGameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalPegGameObject.swift; sourceTree = "<group>"; };
 		4698C5172B90A71B00BB396B /* GoalPegGameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPegGameObject.swift; sourceTree = "<group>"; };
@@ -119,6 +143,10 @@
 		4698C51D2B90A90500BB396B /* StubbornPegGameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbornPegGameObject.swift; sourceTree = "<group>"; };
 		4698C51F2B90A93900BB396B /* HealthPegGameObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthPegGameObject.swift; sourceTree = "<group>"; };
 		469C636D2B8F69EE005A3896 /* PreloaderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreloaderDelegate.swift; sourceTree = "<group>"; };
+		46CC0AE72B930CD300A0F367 /* PegTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PegTests.swift; sourceTree = "<group>"; };
+		46CC0AE92B930E9800A0F367 /* BlockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockTests.swift; sourceTree = "<group>"; };
+		46CC0AEB2B93109F00A0F367 /* LevelDesignerViewModelTestsOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDesignerViewModelTestsOne.swift; sourceTree = "<group>"; };
+		46CC0AED2B9326B000A0F367 /* LevelDesignerViewModelTestsTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelDesignerViewModelTestsTwo.swift; sourceTree = "<group>"; };
 		46E5A3662B91F00600B255BC /* Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sound.swift; sourceTree = "<group>"; };
 		46E5A3682B91F00D00B255BC /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		46E5A36C2B921C7600B255BC /* hitstubborn.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hitstubborn.mp3; sourceTree = "<group>"; };
@@ -256,9 +284,47 @@
 		464192D22B8375340098F746 /* PeggleCloneTests */ = {
 			isa = PBXGroup;
 			children = (
-				464192D32B8375340098F746 /* PeggleCloneTests.swift */,
+				467638D32B92FD0200072658 /* GameTests */,
+				467638D22B92FCF400072658 /* PersistenceTests */,
+				467638D12B92FCE800072658 /* LevelDesignerTests */,
 			);
 			path = PeggleCloneTests;
+			sourceTree = "<group>";
+		};
+		467638D12B92FCE800072658 /* LevelDesignerTests */ = {
+			isa = PBXGroup;
+			children = (
+				467638D52B92FD4100072658 /* GameboardTests.swift */,
+				46CC0AE72B930CD300A0F367 /* PegTests.swift */,
+				46CC0AE92B930E9800A0F367 /* BlockTests.swift */,
+				46CC0AEB2B93109F00A0F367 /* LevelDesignerViewModelTestsOne.swift */,
+				46CC0AED2B9326B000A0F367 /* LevelDesignerViewModelTestsTwo.swift */,
+			);
+			path = LevelDesignerTests;
+			sourceTree = "<group>";
+		};
+		467638D22B92FCF400072658 /* PersistenceTests */ = {
+			isa = PBXGroup;
+			children = (
+				466F27412B933F4900536067 /* PersistenceTests.swift */,
+			);
+			path = PersistenceTests;
+			sourceTree = "<group>";
+		};
+		467638D32B92FD0200072658 /* GameTests */ = {
+			isa = PBXGroup;
+			children = (
+				466F27432B934CAC00536067 /* GameEngineTests.swift */,
+				461B479A2B9353C5003CCE77 /* PegGameObjectTests.swift */,
+				461B479C2B935BB3003CCE77 /* BallGameObjectTests.swift */,
+				461B479E2B935C05003CCE77 /* BlockGameObjectTests.swift */,
+				461B47A02B935CF4003CCE77 /* PhysicsObjectTests.swift */,
+				461B47A22B935D27003CCE77 /* BucketGameObjectTests.swift */,
+				461B47A42B935EA9003CCE77 /* PhysicsEngineTests.swift */,
+				461B47A62B936379003CCE77 /* CollisionHandlerTests.swift */,
+				461B47A82B936997003CCE77 /* IntersectorTests.swift */,
+			);
+			path = GameTests;
 			sourceTree = "<group>";
 		};
 		4698C5122B90A59100BB396B /* GamePegs */ = {
@@ -472,6 +538,7 @@
 					};
 					464192CE2B8375340098F746 = {
 						CreatedOnToolsVersion = 15.1;
+						LastSwiftMigration = 1510;
 						TestTargetID = 464192BE2B8375330098F746;
 					};
 				};
@@ -607,7 +674,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				464192D42B8375340098F746 /* PeggleCloneTests.swift in Sources */,
+				461B479F2B935C05003CCE77 /* BlockGameObjectTests.swift in Sources */,
+				46CC0AEC2B93109F00A0F367 /* LevelDesignerViewModelTestsOne.swift in Sources */,
+				46CC0AEE2B9326B000A0F367 /* LevelDesignerViewModelTestsTwo.swift in Sources */,
+				461B47A72B936379003CCE77 /* CollisionHandlerTests.swift in Sources */,
+				466F27442B934CAC00536067 /* GameEngineTests.swift in Sources */,
+				461B479B2B9353C5003CCE77 /* PegGameObjectTests.swift in Sources */,
+				46CC0AE82B930CD300A0F367 /* PegTests.swift in Sources */,
+				466F27422B933F4900536067 /* PersistenceTests.swift in Sources */,
+				46CC0AEA2B930E9800A0F367 /* BlockTests.swift in Sources */,
+				461B47A92B936997003CCE77 /* IntersectorTests.swift in Sources */,
+				461B47A52B935EA9003CCE77 /* PhysicsEngineTests.swift in Sources */,
+				461B47A32B935D27003CCE77 /* BucketGameObjectTests.swift in Sources */,
+				467638D62B92FD4100072658 /* GameboardTests.swift in Sources */,
+				461B479D2B935BB3003CCE77 /* BallGameObjectTests.swift in Sources */,
+				461B47A12B935CF4003CCE77 /* PhysicsObjectTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -810,6 +891,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -821,6 +903,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PeggleClone.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PeggleClone";
@@ -832,6 +915,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;

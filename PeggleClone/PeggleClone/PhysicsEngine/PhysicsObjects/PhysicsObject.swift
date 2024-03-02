@@ -57,7 +57,7 @@ class PhysicsObject {
     }
 
     func setHitCount(newHitCount: Int) {
-        guard newHitCount > 0 else {
+        guard newHitCount >= 0 else {
             return
         }
 

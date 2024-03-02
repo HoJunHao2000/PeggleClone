@@ -15,6 +15,7 @@ class StubbornPegGameObject: PegGameObject {
                                               isMoveable: true,
                                               diameter: peg.diameter,
                                               elasticity: 0.9,
+                                              rotation: peg.rotation,
                                               mass: peg.diameter * 4)
         let powerup: PowerUp? = nil
         let pegtype = peg.pegtype

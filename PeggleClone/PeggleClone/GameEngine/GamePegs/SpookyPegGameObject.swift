@@ -15,6 +15,7 @@ class SpookyPegGameObject: PegGameObject {
                                               isMoveable: false,
                                               diameter: peg.diameter,
                                               elasticity: PegGameObject.DEFAULT_PEG_ELASTICITY,
+                                              rotation: peg.rotation,
                                               mass: peg.diameter)
         let powerup: PowerUp? = Spooky()
         let pegtype = peg.pegtype

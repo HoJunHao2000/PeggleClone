@@ -36,7 +36,7 @@ class CollisionDelegate {
         let normalizedNormal = Utils.normalize(normal)
 
         let distance = Utils.distanceBetween(point1: circle1.position, point2: circle2.position)
-        let overlap = (circle1.diameter / 2) + (circle2.diameter / 2) - distance
+        let overlap = ((circle1.diameter / 2) + (circle2.diameter / 2) - distance) * 1.001
         if circle1.isMoveable && circle2.isMoveable {
             // Overlap resolution
             let pen_res_unit = Utils.scaleBy(normalizedNormal, n: -1)

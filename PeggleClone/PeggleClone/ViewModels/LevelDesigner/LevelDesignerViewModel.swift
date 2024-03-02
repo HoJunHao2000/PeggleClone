@@ -95,6 +95,10 @@ class LevelDesignerViewModel: ObservableObject {
     }
 
     func setBoardSize(newSize: CGSize) {
+        guard newSize.width > 0 && newSize.height > 0 else {
+            return
+        }
+
         guard validator.arePegsAndBlocksWithinBoard(boardSize: newSize, gameboard: gameboard) else {
             return
         }
@@ -192,8 +196,8 @@ class LevelDesignerViewModel: ObservableObject {
     func setSelectedBlock(block: Block?) {
         resetSelection()
         self.selectedBlock = block
-        self.height = Double(block?.height ?? 50)
-        self.width = Double(block?.width ?? 25)
+        self.height = Double(block?.height ?? 25)
+        self.width = Double(block?.width ?? 50)
         self.rotation = block?.rotation
         objectWillChange.send()
     }

@@ -15,6 +15,7 @@ class KaboomPegGameObject: PegGameObject {
                                               isMoveable: false,
                                               diameter: peg.diameter,
                                               elasticity: PegGameObject.DEFAULT_PEG_ELASTICITY,
+                                              rotation: peg.rotation,
                                               mass: peg.diameter)
         let powerup: PowerUp? = Kaboom()
         let pegtype = peg.pegtype

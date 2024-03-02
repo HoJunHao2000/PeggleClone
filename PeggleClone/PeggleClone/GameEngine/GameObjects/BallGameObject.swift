@@ -22,13 +22,14 @@ class BallGameObject {
 
     private(set) var physicsObject: CirclePhysicsObject
 
-    init(initialPosition: CGPoint, initialForce: CGVector, initialVelocity: CGVector, diameter: Double) {
+    init(initialPosition: CGPoint, initialForce: CGVector, initialVelocity: CGVector) {
         self.physicsObject = CirclePhysicsObject(position: initialPosition,
                                                  velocity: initialVelocity,
                                                  force: initialForce,
                                                  isMoveable: true,
                                                  diameter: BallGameObject.DEFAULT_BALL_DIAMETER,
                                                  elasticity: BallGameObject.DEFAULT_BALL_ELASTICITY,
+                                                 rotation: 0,
                                                  mass: BallGameObject.DEFAULT_BALL_MASS)
     }
 

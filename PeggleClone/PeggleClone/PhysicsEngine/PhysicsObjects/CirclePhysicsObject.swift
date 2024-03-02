@@ -9,6 +9,7 @@ import Foundation
 
 class CirclePhysicsObject: PhysicsObject {
     let diameter: Double
+    let rotation: Double
 
     let intersector = IntersectorDelegate()
     let collisionHandler = CollisionDelegate()
@@ -19,8 +20,10 @@ class CirclePhysicsObject: PhysicsObject {
          isMoveable: Bool,
          diameter: Double,
          elasticity: Double,
+         rotation: Double,
          mass: Double = PhysicsObject.DEFAULT_MASS) {
         self.diameter = diameter
+        self.rotation = rotation
         super.init(position: position,
                    velocity: velocity,
                    force: force,
