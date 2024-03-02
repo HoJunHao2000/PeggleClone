@@ -10,7 +10,7 @@ import QuartzCore
 
 class GameViewModel: ObservableObject {
     private static let SECONDS_ELAPSED_PER_FRAME: Double = 1 / 120
-    private static let GAME_DURATION: Double = 10
+    private static let GAME_DURATION: Double = 300
 
     private(set) var gameEngine: GameEngine
     private(set) var cannonAngle: Double
@@ -115,9 +115,10 @@ class GameViewModel: ObservableObject {
     }
 
     func end() {
-        stopTimer()
-        displayLink?.invalidate()
-        displayLink = nil
+        self.displayLink?.invalidate()
+        self.displayLink = nil
+        self.timer?.invalidate()
+        self.timer = nil
     }
 
     func shoot(at: CGPoint) {
@@ -125,7 +126,6 @@ class GameViewModel: ObservableObject {
             return
         }
 
-        startTimer()
         gameEngine.launchBall(point: at)
         createDisplayLink()
     }
@@ -145,30 +145,24 @@ class GameViewModel: ObservableObject {
         objectWillChange.send()
     }
 
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: GameViewModel.SECONDS_ELAPSED_PER_FRAME,
-                                     repeats: true) { [weak self] _ in
-            guard let self = self else {
-                return
-            }
-
-            remainingTime -= GameViewModel.SECONDS_ELAPSED_PER_FRAME
-        }
-    }
-
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-
     private func createDisplayLink() {
+        guard self.displayLink == nil && self.timer == nil else {
+            return
+        }
+
         let displayLink = CADisplayLink(
             target: self,
             selector: #selector(step)
         )
-        displayLink.add(to: .current, forMode: .common)
+        let timer = Timer.scheduledTimer(timeInterval: 1,
+                                         target: self,
+                                         selector: #selector(timerStep),
+                                         userInfo: nil,
+                                         repeats: true)
+        displayLink.add(to: .main, forMode: .default)
         self.displayLink = displayLink
         self.previousTime = Date().timeIntervalSince1970
+        self.timer = timer
     }
 
     @objc private func step(displayLink: CADisplayLink) {
@@ -183,5 +177,10 @@ class GameViewModel: ObservableObject {
         }
 
         objectWillChange.send()
+    }
+
+    @objc private func timerStep() {
+        remainingTime -= 1
+        remainingTime = max(0, remainingTime)
     }
 }

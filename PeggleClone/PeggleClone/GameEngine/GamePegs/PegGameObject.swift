@@ -17,7 +17,7 @@
 import Foundation
 
 class PegGameObject {
-    static let MAX_HIT_COUNT: Int = 240
+    static let MAX_HIT_COUNT: Int = 120
     static let DEFAULT_PEG_ELASTICITY: Double = 0.6
 
     private(set) var physicsObject: CirclePhysicsObject

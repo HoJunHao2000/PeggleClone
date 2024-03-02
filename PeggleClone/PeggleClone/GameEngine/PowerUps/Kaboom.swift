@@ -20,7 +20,7 @@ class Kaboom: PowerUp {
             return
         }
 
-        peg.physicsObject.incrementHitCount()
+        peg.physicsObject.setHitCount(newHitCount: PegGameObject.MAX_HIT_COUNT + 1)
 
         let maxDistance = Kaboom.EXPLOSION_RADIUS + (peg.diameter / 2) + (ball.diameter / 2)
         if Utils.distanceBetween(point1: ball.position, point2: peg.position) < maxDistance {
@@ -41,8 +41,6 @@ class Kaboom: PowerUp {
                 }
             }
         }
-
-        peg.physicsObject.setHitCount(newHitCount: PegGameObject.MAX_HIT_COUNT + 1)
 
         SoundManager.instance.playSound(.boom)
     }
