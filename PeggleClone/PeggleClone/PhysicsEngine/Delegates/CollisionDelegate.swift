@@ -58,6 +58,14 @@ class CollisionDelegate {
 
             circle1.setVelocity(newVelocity: newVelocity1)
             circle2.setVelocity(newVelocity: newVelocity2)
+
+            if circle1.diameter == BallGameObject.DEFAULT_BALL_DIAMETER {
+                circle2.incrementHitCount()
+            }
+
+            if circle2.diameter == BallGameObject.DEFAULT_BALL_DIAMETER {
+                circle1.incrementHitCount()
+            }
         } else if circle1.isMoveable {
             // Overlap resolution
             let adjustmentVector = Utils.scaleBy(normalizedNormal, n: -overlap)

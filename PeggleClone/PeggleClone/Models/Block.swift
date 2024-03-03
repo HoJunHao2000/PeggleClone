@@ -1,10 +1,17 @@
-//
-//  Block.swift
-//  PeggleClone
-//
-//  Created by Ho Jun Hao on 25/2/24.
-//
+/**
+ The `Block` class represents a data of a block in the Peggle-like game. It defines the properties and behavior of a
+ block.
 
+ ## Invariants:
+ - Each block has a unique identifier (`id`).
+ - The block must have a valid position. i.e. cannot have negative x or y
+ - The block must have a valid size. i.e. height and width must be greater than 0
+ - The peg must have a rotation.
+
+ - Note: The `Block` class conforms to the `Equatable` protocol, with equality based on the `id` property.
+
+ - Authors: CS3217, HoJunHao2000
+ */
 import Foundation
 
 class Block {

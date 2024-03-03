@@ -2,9 +2,6 @@
 The `PhysicsEngine` class manages the physics simulation for a Peggle-like game.
 It handles the addition and removal of physics objects, updating their positions of physics obejcts.
 
-## Information contained in `PhysicsEngine`:
-- Array of PhysicsObject instances representing the physical objects in the simulation.
-
 ## Representation Invariants for Every `PhysicsEngine`:
 - The array of PhysicsObject instances must not contain any duplicate objects.
 

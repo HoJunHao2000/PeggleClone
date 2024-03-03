@@ -132,7 +132,7 @@ The user has 2 ways of using the cannon
 -   Stubborn pegs can also hit other stubborn pegs causing them to move
 -   Stubborn pegs may collide with other game objects but will not cause them to be activated
 -   Cannonball loses significant speed and bounces off surface
--   Only way for stubborn peg to be destroyed is for it to exit the gameboard from the bottom
+-   Only way for stubborn peg to be destroyed is for it to exit the gameboard from the bottom or if premature removal (due to ball getting stuck)
 -   Stubborn peg will bounce off the bucket (including the top)
 -   Conservation of momenetum is followed, bigger objects would move slower after colliding compared to smaller lighter objects
 
@@ -156,11 +156,11 @@ The user has 2 ways of using the cannon
 ### Win and Lose Conditions
 
 -   Win conditions
-    -   Time has not run out
+    -   Time has not run out AND
     -   All Goal Pegs (i.e. orange pegs) have been destroyed
 -   Lose conditions
-    -   Time has ran out
-    -   No more balls remaining
+    -   Time has ran out AND/OR
+    -   No more balls remaining AND/OR
     -   There exists Goal pegs on the gameboard
 
 Upon either of this condition, a pop up will appear and the user and click on the `OK` button to return the Main menu.

@@ -2,10 +2,6 @@
  The `Gameboard` struct represents the game board for a Peggle-like game.
  It defines the structure of the gameboard, manages pegs' positions, and enforces specific constraints.
 
- ## Information contained in `Gameboard`:
- - Rectangular gameboard
- - Pegs on the gameboard
-
  ## Representation Invariants for Every `Gameboard`:
  - All pegs must be within the boundaries of the gameboard.
  - All blocks must be within the boundaries of the gameboard.

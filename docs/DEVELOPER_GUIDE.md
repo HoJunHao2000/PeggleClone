@@ -378,16 +378,15 @@ _^The image above gives a sample flow of what classes and functions are involved
 
 ## Stubborn pegs implementation
 
--   Disable the hitcount for the PegGameObject so they will never be destroyed
+-   Disable the isLit for the PegGameObject so they will never be destroyed on ball exit
 -   Create a CirclePhysicsObject with isMoveable set to true (different from other pegs which are set to false), this way physics engine will know that the peg can move according to velocity and forces.
 -   Treat the peg like another ball, except that it doesn't cause other pegs to incrementHitCount when collided
--   Points provided only when stubborn peg exits the gameboard from the bottom
--   Law of conservation of momentum is obeyed. I used impulse to calculate the new velocity, mass taken into consideraation. (look at CollisionDelegate lines 49 - 60)
+-   Law of conservation of momentum is obeyed. I used impulse to calculate the new velocity, mass taken into consideration. (look at CollisionDelegate lines 49 - 60)
 
 ## Health pegs implementation
 
--   Override the isLit in PegGameObject to only light up after 3 hits
--   Override the shouldRemove in PegGameObject to activate after 4 hits
+-   Override the isLit in PegGameObject to only return true after 3 hits
+-   Override the shouldRemove in PegGameObject to return true after 4 hits
 -   This way the peg will need at least 3 hits before it is removed from game on exit
 -   More hits will cause the peg to disappear
 -   View is able to access the peg's hitcount and from the hitcount it is able to decide what image color to use to represent the current health of peg

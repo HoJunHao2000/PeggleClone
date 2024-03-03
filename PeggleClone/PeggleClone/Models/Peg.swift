@@ -1,5 +1,5 @@
 /**
- The `Peg` struct represents a peg in the Peggle-like game. It defines the properties and behavior of a peg.
+ The `Peg` class represents data of a  peg in the Peggle-like game. It defines the properties and behavior of a peg.
 
  ## Invariants:
  - Each peg has a unique identifier (`id`).
@@ -8,7 +8,7 @@
  - The peg must have a rotation.
  - The peg must have a type  property (`pegtype`) indicating what kind of peg it is.
 
- - Note: The `Peg` struct conforms to the `Equatable` protocol, with equality based on the `id` property.
+ - Note: The `Peg` class  conforms to the `Equatable` protocol, with equality based on the `id` property.
 
  - Authors: CS3217, HoJunHao2000
  */
