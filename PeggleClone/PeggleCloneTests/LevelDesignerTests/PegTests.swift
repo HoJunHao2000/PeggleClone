@@ -59,22 +59,4 @@ final class PegTests: XCTestCase {
 
         XCTAssertEqual(peg.diameter, newDiameter, "Failed to set diameter")
     }
-
-    func testEquality() {
-        let peg1Id = UUID()
-        let peg2Id = UUID()
-        let position_1 = CGPoint(x: 10, y: 20)
-        let position_2 = CGPoint(x: 15, y: 25)
-
-        let peg1 = Peg(id: peg1Id, position: position_1, pegtype: .NormalPeg)
-        let peg2 = Peg(id: peg1Id, position: position_1, pegtype: .GoalPeg)
-        let peg3 = Peg(id: peg2Id, position: position_2, pegtype: .NormalPeg)
-        let peg4 = Peg(id: peg2Id, position: position_1, pegtype: .GoalPeg)
-        let peg5 = Peg(id: peg2Id, position: position_1, pegtype: .NormalPeg)
-
-        XCTAssertEqual(peg1, peg2, "Pegs with the same ID but different colour should be equal")
-        XCTAssertEqual(peg3, peg5, "Pegs with the same ID but different position should be equal")
-        XCTAssertNotEqual(peg1, peg3, "Pegs with different IDs and same color should not be equal")
-        XCTAssertNotEqual(peg2, peg4, "Pegs with different ID and same position should not be equal")
-    }
 }

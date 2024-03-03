@@ -78,7 +78,7 @@ class Peg {
 
 extension Peg: Hashable {
     static func == (lhs: Peg, rhs: Peg) -> Bool {
-        lhs.id == rhs.id || lhs === rhs
+        lhs === rhs
     }
 
     func hash(into hasher: inout Hasher) {

@@ -30,8 +30,6 @@ struct LevelDesignerActionButtonsView: View {
     private var loadButtonView: some View {
         Menu("LOAD") {
             Picker("Current Gameboard", selection: $selectedGameboard) {
-                Text("New Gameboard")
-                    .tag(UUID?.none)
                 ForEach(viewModel.gameboards, id: \.self) { gameboardEntity in
                     if let id = gameboardEntity.id, let name = gameboardEntity.name {
                         Text(name)
@@ -42,8 +40,6 @@ struct LevelDesignerActionButtonsView: View {
             .onChange(of: selectedGameboard) {
                 if let id = selectedGameboard {
                     viewModel.loadGameboard(id: id, preloadId: -1)
-                } else {
-                    viewModel.newGameboard()
                 }
             }
 
@@ -51,7 +47,12 @@ struct LevelDesignerActionButtonsView: View {
                 ForEach(1...3, id: \.self) { index in
                     Button("Preloaded \(index)") {
                         viewModel.loadGameboard(id: UUID(), preloadId: index)
+                        selectedGameboard = nil
                     }
+                }
+                Button("New Gameboard") {
+                    selectedGameboard = nil
+                    viewModel.newGameboard()
                 }
             }
         }

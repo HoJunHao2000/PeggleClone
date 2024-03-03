@@ -126,6 +126,7 @@ class GameViewModel: ObservableObject {
             return
         }
 
+        SoundManager.instance.playSound(.cannon)
         gameEngine.launchBall(point: at)
         createDisplayLink()
     }
@@ -141,6 +142,7 @@ class GameViewModel: ObservableObject {
             return
         }
 
+        SoundManager.instance.playSound(.rotate)
         self.cannonAngle = angleToRotate
         objectWillChange.send()
     }

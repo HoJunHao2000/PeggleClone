@@ -74,20 +74,4 @@ final class BlockTests: XCTestCase {
         block.setWidth(newWidth: -50)
         XCTAssertEqual(block.width, 50, "Failed to set width")
     }
-
-    func testEquality() {
-        let block1Id = UUID()
-        let block2Id = UUID()
-        let position_1 = CGPoint(x: 10, y: 20)
-        let position_2 = CGPoint(x: 15, y: 25)
-
-        let block1 = Block(id: block1Id, position: position_1)
-        let block2 = Block(id: block1Id, position: position_1)
-        let block3 = Block(id: block2Id, position: position_2)
-        let block4 = Block(id: block2Id, position: position_1)
-
-        XCTAssertEqual(block1, block2, "Blocks with the same ID should be equal")
-        XCTAssertEqual(block3, block4, "Blocks with the same ID but different position should be equal")
-        XCTAssertNotEqual(block2, block4, "Blocks with different ID and same position should not be equal")
-    }
 }

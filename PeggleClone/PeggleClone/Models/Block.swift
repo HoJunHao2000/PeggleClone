@@ -99,7 +99,7 @@ class Block {
 
 extension Block: Hashable {
     static func == (lhs: Block, rhs: Block) -> Bool {
-        lhs.id == rhs.id || lhs === rhs
+        lhs === rhs
     }
 
     func hash(into hasher: inout Hasher) {

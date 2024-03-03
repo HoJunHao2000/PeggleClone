@@ -85,16 +85,13 @@ private struct GameLevelView: View {
             .gesture(
                 DragGesture()
                     .onChanged { gesture in
-                        SoundManager.instance.playSound(.rotate)
                         gameViewModel.adjustCannonAngle(point: gesture.location)
                     }
                     .onEnded { gesture in
-                        SoundManager.instance.playSound(.cannon)
                         gameViewModel.shoot(at: gesture.location)
                     }
             )
             .onTapGesture { gestureLocation in
-                SoundManager.instance.playSound(.cannon)
                 gameViewModel.adjustCannonAngle(point: gestureLocation)
                 gameViewModel.shoot(at: gestureLocation)
             }
@@ -149,32 +146,33 @@ private struct GameLevelView: View {
             .position(ball.position)
     }
 
-    private func pegView(imageName: String, width: CGFloat, position: CGPoint) -> some View {
+    private func pegView(imageName: String, peg: PegGameObject) -> some View {
         Image(imageName)
             .resizable()
             .scaledToFit()
-            .frame(width: width)
-            .position(position)
+            .frame(width: peg.diameter)
+            .rotationEffect(.degrees(peg.rotation))
+            .position(peg.position)
     }
 
     private func normalPegView(peg: PegGameObject) -> some View {
-        pegView(imageName: peg.isLit ? "peg-blue-glow" : "peg-blue", width: peg.diameter, position: peg.position)
+        pegView(imageName: peg.isLit ? "peg-blue-glow" : "peg-blue", peg: peg)
     }
 
     private func goalPegView(peg: PegGameObject) -> some View {
-        pegView(imageName: peg.isLit ? "peg-orange-glow" : "peg-orange", width: peg.diameter, position: peg.position)
+        pegView(imageName: peg.isLit ? "peg-orange-glow" : "peg-orange", peg: peg)
     }
 
     private func kaboomPegView(peg: PegGameObject) -> some View {
-        pegView(imageName: peg.isLit ? "peg-green-glow" : "peg-green", width: peg.diameter, position: peg.position)
+        pegView(imageName: peg.isLit ? "peg-green-glow" : "peg-green", peg: peg)
     }
 
     private func spookyPegView(peg: PegGameObject) -> some View {
-        pegView(imageName: peg.isLit ? "peg-purple-glow" : "peg-purple", width: peg.diameter, position: peg.position)
+        pegView(imageName: peg.isLit ? "peg-purple-glow" : "peg-purple", peg: peg)
     }
 
     private func stubbornPegView(peg: PegGameObject) -> some View {
-        pegView(imageName: peg.isLit ? "peg-grey-glow" : "peg-grey", width: peg.diameter, position: peg.position)
+        pegView(imageName: peg.isLit ? "peg-grey-glow" : "peg-grey", peg: peg)
     }
 
     private func healthPegView(peg: PegGameObject) -> some View {
@@ -183,9 +181,7 @@ private struct GameLevelView: View {
             2: "peg-pink-glow",
             3: "peg-red"
         ]
-        return pegView(imageName: hitCountMap[peg.hitCount] ?? "peg-yellow",
-                       width: peg.diameter,
-                       position: peg.position)
+        return pegView(imageName: hitCountMap[peg.hitCount] ?? "peg-yellow", peg: peg)
     }
 
     private var blocksView: some View {

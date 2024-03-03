@@ -328,8 +328,9 @@ Check representations functions were implemented for
 
         -   Select the LOAD action button
         -   A menu containing all the previous saved gameboards names should appear
-        -   The menu should also contain 3 preloaded levels at the very top
+        -   The menu should also contain 3 preloaded levels at the top
         -   The tick indicates which gameboard is currently loaded
+        -   having no tick means that there is no loaded gameboard (i.e. blank gameboard or preloaded gameboard)
         -   Find and select the name of the gameboard that you want to load in
 
     -   To load prelaoded levels
@@ -337,7 +338,7 @@ Check representations functions were implemented for
         -   Select the LOAD action button
         -   Select one of the 3 preloaded levels
         -   the preloaded level should be loaded onto the screen
-        -   The preloaded level is loaded in as a "New Gameboard" indicated by the tick on the left of "New Gameboard" when you click LOAD action button
+        -   The preloaded level is loaded in as a "New Gameboard" with pegs
         -   this means that you can never modify the layout of the exisiting preloaded levels, however you can modify and save that "New Gameboard" with preloaded pegs/blocks as a new level
 
         -   Preloaded 1 should appear like this
@@ -383,7 +384,7 @@ Check representations functions were implemented for
 -   Level Selector
 
     -   Check for Preloaded levels
-        -   Preloaded levels should always be at the top of the list
+        -   Preloaded levels should always be at the top of the list right below "New gameboard"
         -   There should be 3 Preloaded levels named
             -   Preloaded 1
             -   Preloaded 2
